@@ -17,7 +17,7 @@ Pinned client updates for Minecraft 1.20.1 / Fabric 0.15.7.
 
 5. Launch normally. Existing matching mods are validated and reused. Do not import a replacement instance or independently update individual mods.
 
-## Current release: 1.0.1
+## Current release: 1.0.2
 
 Preserves the tested 78-mod set and disables new automatic JourneyMap death markers. Existing death markers are not deleted. Personal maps, manual waypoint files, saves, screenshots, account login, and graphics/control options are outside the update manifest. The JourneyMap waypoint-settings file is managed by this pack.
 
@@ -26,3 +26,5 @@ Preserves the tested 78-mod set and disables new automatic JourneyMap death mark
 Update releases are deliberate: validate on a client copy, recalculate file/index/pack hashes, then commit the complete manifest together. Clients check the main branch before launching. Minecraft and loader migrations require separate Prism changes.
 
 Only mod-download references and selected settings belong in the manifest. Do not upload worlds, accounts, player data, personal maps, server access lists, or backups. The setup ZIP contains the official packwiz bootstrapper and instructions; the manifest points to official mod download services.
+
+Release 1.0.2 adds a tiny client-only Family Settings patch. Before voice chat initializes, it changes only Plasmo Voice's check_for_updates preference to false, preserving microphone devices, volumes and all other voice preferences. Source is in tools/family-settings/FamilySettings.java. It does not change voice functionality or update the voice mod itself.

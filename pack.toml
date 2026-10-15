@@ -1,12 +1,12 @@
 name = "Create and Explore - Family Edition"
 author = "Family server"
-version = "1.0.1"
+version = "1.0.2"
 pack-format = "packwiz:1.1.0"
 
 [index]
 file = "index.toml"
 hash-format = "sha256"
-hash = "60f25f55c60dc17c19b9da3454b2e7c20d2630a5fbf10ee439356424e98f785f"
+hash = "ec2b4528c3fc8eceff583af515bf8d51cf762e25c7b64f4ab8822b3391a2e80e"
 
 [versions]
 minecraft = "1.20.1"

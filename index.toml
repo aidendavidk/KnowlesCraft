@@ -105,6 +105,11 @@ hash = "fb8dc8fa40d66a7e73fa61d6c8b3f34b47f43c9c51a0e6ab93010d765bb6bb4b"
 metafile = true
 
 [[files]]
+file = "mods/family-settings.pw.toml"
+hash = "accfa36fba191bab15df3238466a6aaa221f288e8225c920912ea8d16716f470"
+metafile = true
+
+[[files]]
 file = "mods/farmersdelight.pw.toml"
 hash = "5fdb77b26a176c7f75f0f1023de4edf2cc27bc067a75bfc13e9803cf1cf8fcc2"
 metafile = true
