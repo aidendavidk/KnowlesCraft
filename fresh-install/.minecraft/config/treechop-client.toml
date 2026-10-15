@@ -1,0 +1,19 @@
+[chopping]
+sneakBehavior = "INVERT_CHOPPING"
+treesMustHaveLeaves = true
+chopInCreativeMode = false
+choppingEnabled = false
+fellingEnabled = true
+
+[visuals]
+removeBarkOnInteriorLogs = true
+
+[visuals.choppingIndicator]
+yOffset = 0
+xOffset = 16
+enabled = true
+
+[settingsScreen]
+showFeedbackMessages = true
+showFellingOptions = false
+showTooltips = true
