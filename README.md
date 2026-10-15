@@ -11,7 +11,7 @@ This is the file for someone who does **not** already have the Family Edition in
 1. Install Prism Launcher and sign in with the Microsoft account that owns Minecraft Java Edition.
 2. Download the ZIP above. **Do not unzip it.**
 3. In Prism choose **Add Instance > Import** and select `FamilyEdition-Fresh-Install.zip`.
-4. Use Java 17. Apple Silicon Macs should use ARM64 Java; Intel Macs should use x64 Java.
+4. (Optional) Use Java 17. Apple Silicon Macs should use ARM64 Java; Intel Macs should use x64 Java.
 5. Launch normally. The first launch can take a few minutes while the current tested pack downloads.
 6. Open Multiplayer and add the family server address provided by the owner.
 
