@@ -1,0 +1,15 @@
+FAMILY CREATE & EXPLORE - FRESH INSTALL
+
+1. Install Prism Launcher and sign in with the Microsoft account that owns Minecraft Java Edition.
+2. In Prism choose Add Instance > Import, then select FamilyEdition-Fresh-Install.zip. Import the ZIP directly; do not unzip it first.
+3. Use Java 17. On Apple Silicon Macs choose ARM64; on Intel Macs choose x64.
+4. Launch the instance. Before Minecraft starts, the included updater downloads the current tested Family Edition mods and managed settings from the owner's GitHub repository. The first launch can take a few minutes.
+5. Open Multiplayer and add the family server address provided by the owner.
+
+Do not update individual mods yourself. This pack checks the owner's pinned update manifest before each launch so everyone stays on the same tested version.
+
+Minecraft is still Minecraft: ordinary tools, food, farming, building, mining and exploration all work. Create machinery is optional. JourneyMap is included, automatic new death markers are disabled by the managed settings, and graves protect dropped belongings.
+
+Shaders should remain off on weaker Macs. The instance allows 4 GB of memory. Voice chat starts muted; enable the microphone only if you want voice chat.
+
+This installer contains no worlds, Microsoft account credentials, personal screenshots, or personal map history.
