@@ -9,9 +9,9 @@ Our family Minecraft modpack: familiar Minecraft with better exploration, buildi
 1. Install [Prism Launcher](https://prismlauncher.org/) and sign in with the Microsoft account that owns Minecraft Java Edition.
 2. Download the ZIP above. **Do not unzip it.**
 3. In Prism, choose **Add Instance > Import** and select `KnowlesCraft.zip`.
-4. Launch KnowlesCraft. The first launch can take a few minutes while the pack downloads.
+4. Select **KnowlesCraft** and click **Launch**.
 5. Open **Multiplayer** and join **KnowlesCraft**.
 
-The updater is included; updates install automatically when you launch.
+Setup and updates run automatically before Minecraft opens. Allow a few extra minutes the first time.
 
 **Use the download link above, not GitHub's Code > Download ZIP button.** That button downloads the repository source, not the Minecraft instance.
