@@ -10,6 +10,7 @@ import java.util.List;
 /** Set up new profiles only; Controlify owns camera response and calibration. */
 public final class KnowlesCraftController implements ControlifyEntrypoint {
  public void onControlifyInit(ControlifyApi api){
+  dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(net.minecraft.class_429.class,OptionsBackProcessor::new);
   var bindApi=dev.isxander.controlify.api.bind.ControlifyBindApi.get();
   // Some ported mods register outside Fabric's key registry. Correlate those too.
   for(var key:net.minecraft.class_310.method_1551().field_1690.field_1839){
@@ -45,4 +46,18 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
      .map(id->input.getBinding(id)!=null?id:new class_2960("controlify:change_perspective")).toArray(class_2960[]::new);
  }
  public void onControllersDiscovered(ControlifyApi api){}
+
+ /** Options' generic close resumes play; its Done button retains the parent. */
+ public static final class OptionsBackProcessor extends dev.isxander.controlify.screenop.ScreenProcessor<net.minecraft.class_429>{
+  public OptionsBackProcessor(net.minecraft.class_429 screen){super(screen);}
+  public boolean backToParent(){
+   var done=getWidget("gui.done").orElse(null);
+   if(!(done instanceof net.minecraft.class_4185 button))return false;
+   playClackSound();button.method_25306();return true;
+  }
+  protected void handleButtons(dev.isxander.controlify.controller.ControllerEntity controller){
+   if(dev.isxander.controlify.bindings.ControlifyBindings.GUI_BACK.on(controller).guiPressed().get()&&backToParent())return;
+   super.handleButtons(controller);
+  }
+ }
 }
