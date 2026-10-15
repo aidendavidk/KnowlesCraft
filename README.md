@@ -2,7 +2,7 @@
 
 Pinned client setup for Minecraft 1.20.1 / Fabric 0.15.7.
 
-## New install â€” start here
+## New install - start here
 
 **[Download the fresh-install Prism ZIP](https://raw.githubusercontent.com/aidendavidk/family-minecraft-pack/main/dist/KnowlesCraft-Fresh-Install.zip)**
 
@@ -18,7 +18,7 @@ You should not need to manually choose or configure a Java version for this pack
 
 Do **not** use GitHub's **Code > Download ZIP** button; that downloads the repository source, not the Minecraft instance.
 
-## Already installed â€” enable automatic updates
+## Already installed - enable automatic updates
 
 Use this only if the existing **Create and Explore - Family Edition** Prism instance is already installed.
 
