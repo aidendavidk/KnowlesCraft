@@ -1,8 +1,8 @@
-name = "Fabric Language Kotlin"
-filename = "fabric-language-kotlin-1.10.19+kotlin.1.9.23.jar"
+name = "Fabric Language Kotlin 1.11.0+kotlin.2.0.0"
+filename = "fabric-language-kotlin-1.11.0+kotlin.2.0.0.jar"
 side = "client"
 
 [download]
-url = "https://cdn.modrinth.com/data/Ha28R6CL/versions/ZMokinzs/fabric-language-kotlin-1.10.19%2Bkotlin.1.9.23.jar"
+url = "https://cdn.modrinth.com/data/Ha28R6CL/versions/afsFajDC/fabric-language-kotlin-1.11.0%2Bkotlin.2.0.0.jar"
 hash-format = "sha512"
-hash = "0c31443b5061d85787de452d1dc0196a0e3391146aa5f030ef5fa95558b0f2b2bb9a0613fc0e5621e9d796d06e717fef0d0c98046f4ead04d150e0eb2d19abdc"
+hash = "afc292e199869b982f18bbad208fed4a1d95b2f4292e0cc422ee8116d1da1d91132f554ac0608e7c87959d7ede37c20293133c811986dcfc80a8648f29d13028"

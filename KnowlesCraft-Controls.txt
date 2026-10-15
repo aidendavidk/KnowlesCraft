@@ -1,27 +1,32 @@
 KnowlesCraft controller controls
 
 Controller support is included on every computer. Connect a gamepad to switch to
-controller prompts; disconnect it to return to keyboard/mouse mode. Controller
+controller prompts; keyboard and mouse remain usable. Controller
 type is detected automatically. Prompts follow the connected controller, including on Steam Deck.
 
-STANDARD GAMEPAD
-Left stick: move; click to sprint. Right stick: look; click to toggle sneak.
-A: jump. B: drop item / close menu. X: swap hands. Y: inventory.
+STANDARD GAMEPAD (Xbox names; PlayStation prompts follow your controller)
+Left stick: move; click to sprint. Right stick: look; click to sneak.
+A: jump. B: close menus. X: swap hands. Y: inventory.
 RT: mine/attack. LT: use/place. LB/RB: hotbar. Menu: pause.
-D-pad up: full map. D-pad down: backpack. D-pad right: voice settings.
-D-pad left: pick block.
+D-pad up: chat. Down: drop. Left: pick block. Right: radial menu.
+View/Back: perspective; in menus it toggles the virtual mouse.
 
-Hold View/Back, then:
-Y: other mod controls ring (choose with stick, release to use).
-X: perspective. A: screenshot. B: debug screen.
-D-pad up: Create tool menu (hold); left: zoom (hold).
-D-pad down: waypoint; right: chat.
-LB: backpack tool cycle. RB: player list.
-
-Inventories: A takes a stack, X takes one, Y quick-moves; B closes.
-EMI recipe pages support the mod's LB+LT and RB+RT shortcuts.
+Hold D-pad right, select with the right stick, then release for:
+map, backpack, voice settings, waypoint, chat, perspective, player list, pick block.
+Other mod keybindings (including Create and Zoomify) are available in Controlify's
+binding screen. Assign held actions directly to a spare button if you use them.
+Inventories: A selects, X takes half, Y quick-moves; B closes.
 Use the trackpad/mouse for recipe searching, maps and complex building screens.
-All bindings are editable under Options > Controls > Controller.
+Mixed input is enabled on new profiles so mouse and gamepad can be used together.
+If a controller was already configured in Controlify, your settings are preserved.
+
+CAMERA AND DETECTION
+Controlify's stock analog camera and device calibration are used, without a
+custom camera curve, added smoothing or mouse emulation. Complete calibration
+when prompted. Sensitivity and deadzones can be changed in Controlify settings.
+PlayStation USB/Bluetooth devices use their detected prompts. Steam Input can
+expose an Xbox virtual controller, in which case prompts follow that device;
+you can override the icon type in Controlify if needed.
 
 STEAM DECK: STEAM INPUT (ONE TIME, FOR YOUR PRISM STEAM SHORTCUT)
 Launch Prism from Gaming Mode. In Steam's controller settings select the template

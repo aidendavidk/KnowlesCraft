@@ -1,0 +1,8 @@
+name = "2.0.4 for fabric 1.20.1"
+filename = "controlify-2.0.4+1.20.1-fabric-offline.jar"
+side = "client"
+
+[download]
+url = "https://cdn.modrinth.com/data/DOUdJVEm/versions/sDAshEPv/controlify-2.0.4%2B1.20.1-fabric-offline.jar"
+hash-format = "sha512"
+hash = "2b70f1321917268136f43d92ec2d40968363ced248c153619abf9528499f595105413b95d869cc44b8e87408c8fcff0682156bb93579d3d821ff59d17e79ba69"

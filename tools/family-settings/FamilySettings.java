@@ -28,25 +28,14 @@ public final class FamilySettings implements PreLaunchEntrypoint {
         }catch(IOException|SecurityException e){return false;}
     }
     static void applyClientDefaults(Path game,String os,Path dmi)throws Exception{
-        boolean deck=isSteamDeck(os,dmi);Path config=game.resolve("config/midnightcontrols.json");
+        boolean deck=isSteamDeck(os,dmi);Path config=game.resolve("config/controlify.json");
         if(!Files.exists(config)){
             try(InputStream in=FamilySettings.class.getResourceAsStream("/knowlescraft/controller-defaults.json")){
                 if(in==null)throw new IOException("Controller defaults missing");
-                String defaults=new String(in.readAllBytes(),StandardCharsets.UTF_8);
-                Files.createDirectories(config.getParent());Files.writeString(config,defaults,StandardOpenOption.CREATE_NEW);
+                Files.createDirectories(config.getParent());Files.write(config,in.readAllBytes(),StandardOpenOption.CREATE_NEW);
             }
         }
         if(!deck)return;
-        Path promptMarker=game.resolve("config/knowlescraft/controller-auto-prompts-v2.applied");
-        if(!Files.exists(promptMarker)){
-            String before=Files.readString(config);
-            // Upgrade only our generated profile, leaving every binding and other setting intact.
-            if(before.contains("controller.controls.key.journeymap.map_toggle_alt")&&before.contains("controller.controls.key.travelersbackpack.inventory")){
-                String after=before.replaceAll("(\"controllerType\"\\s*:\\s*)\"XBOX\"","$1\"DEFAULT\"");
-                if(!after.equals(before))atomicWrite(config,after);
-                Files.createDirectories(promptMarker.getParent());Files.writeString(promptMarker,"Controller prompts follow the connected controller.\n");
-            }
-        }
         Path marker=game.resolve("config/knowlescraft/deck-preset-v1.applied");if(Files.exists(marker))return;
         boolean oled=Files.readString(dmi.resolve("product_name")).strip().equalsIgnoreCase("Galileo");
         Files.createDirectories(marker.getParent());
@@ -65,7 +54,7 @@ public final class FamilySettings implements PreLaunchEntrypoint {
         Path irisSaved=marker.getParent().resolve("iris.before-deck-preset.properties");if(!Files.exists(irisSaved))Files.writeString(irisSaved,irisBefore);
         String irisAfter=irisBefore.replaceAll("(?m)^enableShaders=[^\\r\\n]*","enableShaders=false");
         if(!irisAfter.contains("enableShaders="))irisAfter+="\nenableShaders=false\n";atomicWrite(iris,irisAfter);
-        Files.writeString(marker,(oled?"Steam Deck OLED · 90 FPS cap":"Steam Deck LCD · 60 FPS cap")+"\nDefaults applied once; later changes are yours.\n");
+        Files.writeString(marker,(oled?"Steam Deck OLED Â· 90 FPS cap":"Steam Deck LCD Â· 60 FPS cap")+"\nDefaults applied once; later changes are yours.\n");
         System.out.println("[KnowlesCraft] Applied "+(oled?"OLED 90":"LCD 60")+" FPS Deck preset. Future launches preserve your changes.");
     }
     static String option(String text,String key,String value){

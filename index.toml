@@ -101,12 +101,12 @@ metafile = true
 
 [[files]]
 file = "mods/fabric-language-kotlin.pw.toml"
-hash = "fb8dc8fa40d66a7e73fa61d6c8b3f34b47f43c9c51a0e6ab93010d765bb6bb4b"
+hash = "bfc75c1422b02bc881c95a4f45325636786b6092ceb095bb27223318ced13d36"
 metafile = true
 
 [[files]]
 file = "mods/family-settings.pw.toml"
-hash = "3542079a19cf9dac4b9693f1afebff23c949634959691ccacba701cc78aa9bc1"
+hash = "a46b7a727bd541812127427710cca907828eb45e625728d1a592ab3b3a5aadff"
 metafile = true
 
 [[files]]
@@ -386,7 +386,7 @@ metafile = true
 
 [[files]]
 file = "mods/yet_another_config_lib_v3.pw.toml"
-hash = "9c72e802f1e11e235f00ddb48ae123686948e1beea136dc7cc2c00f28d384ac5"
+hash = "4395bdf423a54eda6b23847b4a85401ceb66d7918a036bb708efae6263bbc06f"
 metafile = true
 
 [[files]]
@@ -396,14 +396,14 @@ metafile = true
 
 [[files]]
 file = "mods/zoomify.pw.toml"
-hash = "9d36fa0b4d60d578da370cd05ff415c9f8b6b2b45848ed30a0977f5c62314981"
-metafile = true
-
-[[files]]
-file = "mods/midnightcontrols.pw.toml"
-hash = "3d3eb44ba65ae77df2ff7e26b00790a7db4c4dff8e009720fa49fb97a14cdd90"
+hash = "b28181384dbe799c3ce6a4e88ad2f8641d370074dad53e251dbf7013ede94af5"
 metafile = true
 
 [[files]]
 file = "KnowlesCraft-Controls.txt"
-hash = "cab903d8d76fd9fcefa94e1e97c50888b9bebca1dc94137a5bf5eae5527150e4"
+hash = "f0065f079f1c1e40cddacc7b6a9be68738f8671427272e4fa3cd22d8ff368bf9"
+
+[[files]]
+file = "mods/controlify.pw.toml"
+hash = "6843619171fd9b8c17d79f62b255ac8a155c5765975c4310942b1c9c5337124c"
+metafile = true
