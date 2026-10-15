@@ -2,7 +2,7 @@
 
 Our family Minecraft modpack: familiar Minecraft with better exploration, building, and optional Create machinery.
 
-## Install and play
+## Install
 
 **[Download KnowlesCraft](https://raw.githubusercontent.com/aidendavidk/KnowlesCraft/main/dist/KnowlesCraft-Fresh-Install.zip)**
 
@@ -11,7 +11,5 @@ Our family Minecraft modpack: familiar Minecraft with better exploration, buildi
 3. In Prism, choose **Add Instance > Import** and select `KnowlesCraft-Fresh-Install.zip`.
 4. Launch KnowlesCraft. The first launch can take a few minutes while the pack downloads.
 5. Open **Multiplayer** and join **KnowlesCraft**.
-
-Updates install automatically when you launch.
 
 **Use the download link above, not GitHub's Code > Download ZIP button.** That button downloads the repository source, not the Minecraft instance.
