@@ -1,8 +1,8 @@
-name = "Family Settings"
-filename = "family-settings-1.0.0.jar"
+name = "KnowlesCraft Settings"
+filename = "knowlescraft-settings-1.1.0.jar"
 side = "client"
 
 [download]
-url = "https://raw.githubusercontent.com/aidendavidk/family-minecraft-pack/main/tools/family-settings/family-settings-1.0.0.jar"
+url = "https://raw.githubusercontent.com/aidendavidk/family-minecraft-pack/main/tools/family-settings/knowlescraft-settings-1.1.0.jar"
 hash-format = "sha512"
-hash = "f73d84812a42a90ce3c1e97947a59b3061800cb6f51c64ae26d0c94d19d132403b0379c9769453b34517e212ba479a9e51a1e75fcabc5d4bfa4b9b7e2286ba7b"
+hash = "1686fe5bab2ea2ccb887b7896ade0a954ef7cd03f171ba7da64f6e0182a146ebc6b481bd4fece450ba8474f1608517891fc92478d3ae0db1337c3b02faab2198"
