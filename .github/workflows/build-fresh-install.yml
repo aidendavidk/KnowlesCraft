@@ -1,10 +1,11 @@
-name: Build fresh install ZIP
+name: Build KnowlesCraft download
 
 on:
   push:
     branches: [main]
     paths:
       - 'fresh-install/**'
+      - 'pack.toml'
       - 'setup/FamilyEdition-Enable-AutoUpdates.zip'
       - '.github/workflows/build-fresh-install.yml'
   workflow_dispatch:
@@ -38,6 +39,7 @@ jobs:
           cp "$BOOTSTRAP_JAR" build/.minecraft/packwiz-installer-bootstrap.jar
           (cd build && zip -qr ../dist/FamilyEdition-Fresh-Install.zip .)
           cp dist/FamilyEdition-Fresh-Install.zip dist/KnowlesCraft-Fresh-Install.zip
+          cp dist/FamilyEdition-Fresh-Install.zip dist/KnowlesCraft.zip
 
       - name: Publish generated ZIP to repository
         shell: bash
@@ -45,12 +47,34 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -f dist/FamilyEdition-Fresh-Install.zip dist/KnowlesCraft-Fresh-Install.zip
+          git add -f dist/FamilyEdition-Fresh-Install.zip dist/KnowlesCraft-Fresh-Install.zip dist/KnowlesCraft.zip
           if git diff --cached --quiet; then
-            echo 'Fresh-install ZIP already current.'
+            echo 'KnowlesCraft ZIP already current.'
             exit 0
           fi
-          git commit -m 'Build fresh-install Prism ZIP [skip ci]'
+          git commit -m 'Build KnowlesCraft Prism ZIP [skip ci]'
           git fetch origin main
           git rebase origin/main
           git push origin HEAD:main
+
+      - name: Publish versioned GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="$(python3 -c 'import tomllib; print(tomllib.load(open("pack.toml", "rb"))["version"])')"
+          TAG="v$VERSION"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already published; preserving its download."
+            exit 0
+          fi
+          cat > build/release-notes.md <<'NOTES'
+          Import **KnowlesCraft.zip** into Prism Launcher, then launch and join **KnowlesCraft** in Multiplayer.
+
+          The updater is included. The first launch downloads the pack; later launches check for updates automatically.
+
+          Use the attached **KnowlesCraft.zip**, rather than GitHub's source-code archives.
+          NOTES
+          gh release create "$TAG" dist/KnowlesCraft.zip --target "$GITHUB_SHA" --title "KnowlesCraft $VERSION" --notes-file build/release-notes.md --latest
