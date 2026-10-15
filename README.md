@@ -18,23 +18,6 @@ You should not need to manually choose or configure a Java version for this pack
 
 Do **not** use GitHub's **Code > Download ZIP** button; that downloads the repository source, not the Minecraft instance.
 
-## Already installed - enable automatic updates
-
-Use this only if the existing **Create and Explore - Family Edition** Prism instance is already installed.
-
-[Download the small one-time updater setup ZIP](https://raw.githubusercontent.com/aidendavidk/family-minecraft-pack/main/setup/FamilyEdition-Enable-AutoUpdates.zip).
-
-1. Close Minecraft. In Prism select the existing Family Edition instance and click Folder. Open `.minecraft` (or `minecraft`).
-2. Copy `packwiz-installer-bootstrap.jar` from the ZIP into that folder, next to `options.txt`.
-3. Edit the Prism instance, open **Settings > Custom Commands**, and enable Custom Commands.
-4. Paste this into **Pre-launch command**:
-
-```
-"$INST_JAVA" -jar packwiz-installer-bootstrap.jar -g -s client https://raw.githubusercontent.com/aidendavidk/family-minecraft-pack/main/pack.toml
-```
-
-5. Launch normally. Existing matching mods are validated and reused. Do not import a replacement instance or independently update individual mods.
-
 ## Current release: 1.0.3
 
 Preserves the tested 78-mod set and disables new automatic JourneyMap death markers. Existing death markers are not deleted. Personal maps, manual waypoint files, saves, screenshots, account login, and graphics/control options are outside the update manifest. The JourneyMap waypoint-settings file is managed by this pack.
