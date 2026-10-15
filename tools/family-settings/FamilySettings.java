@@ -35,6 +35,7 @@ public final class FamilySettings implements PreLaunchEntrypoint {
                 Files.createDirectories(config.getParent());Files.write(config,in.readAllBytes(),StandardOpenOption.CREATE_NEW);
             }
         }
+        migrateControllerGuides(game);
         if(!deck)return;
         Path marker=game.resolve("config/knowlescraft/deck-preset-v1.applied");if(Files.exists(marker))return;
         boolean oled=Files.readString(dmi.resolve("product_name")).strip().equalsIgnoreCase("Galileo");
@@ -56,6 +57,32 @@ public final class FamilySettings implements PreLaunchEntrypoint {
         if(!irisAfter.contains("enableShaders="))irisAfter+="\nenableShaders=false\n";atomicWrite(iris,irisAfter);
         Files.writeString(marker,(oled?"Steam Deck OLED Â· 90 FPS cap":"Steam Deck LCD Â· 60 FPS cap")+"\nDefaults applied once; later changes are yours.\n");
         System.out.println("[KnowlesCraft] Applied "+(oled?"OLED 90":"LCD 60")+" FPS Deck preset. Future launches preserve your changes.");
+    }
+    static void migrateControllerGuides(Path game)throws IOException{
+        Path marker=game.resolve("config/knowlescraft/clean-controller-hud-v1.applied");
+        if(Files.exists(marker))return;
+        Path config=game.resolve("config/controlify.json");
+        String before=Files.readString(config);
+        var root=com.google.gson.JsonParser.parseString(before).getAsJsonObject();
+        boolean changed=false;
+        if(root.has("controllers")&&root.get("controllers").isJsonObject()){
+            for(var entry:root.getAsJsonObject("controllers").entrySet()){
+                if(!entry.getValue().isJsonObject())continue;
+                var profile=entry.getValue().getAsJsonObject();
+                if(!profile.has("config")||!profile.get("config").isJsonObject())continue;
+                var configs=profile.getAsJsonObject("config");
+                var generic=configs.has("controlify:config/generic")?configs.getAsJsonObject("controlify:config/generic"):new com.google.gson.JsonObject();
+                generic.addProperty("show_ingame_guide",false);
+                configs.add("controlify:config/generic",generic);changed=true;
+            }
+        }
+        Files.createDirectories(marker.getParent());
+        if(changed){
+            Path backup=marker.getParent().resolve("controlify.before-clean-hud.json");
+            if(!Files.exists(backup))Files.writeString(backup,before,StandardOpenOption.CREATE_NEW);
+            atomicWrite(config,new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(root));
+        }
+        Files.writeString(marker,"Gameplay corner hints hidden. Menu guides and personal controls preserved.\n");
     }
     static String option(String text,String key,String value){
         java.util.regex.Pattern p=java.util.regex.Pattern.compile("(?m)^"+java.util.regex.Pattern.quote(key)+":[^\\r\\n]*");

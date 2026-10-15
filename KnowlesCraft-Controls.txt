@@ -20,6 +20,11 @@ Use the trackpad/mouse for recipe searching, maps and complex building screens.
 Mixed input is enabled on new profiles so mouse and gamepad can be used together.
 If a controller was already configured in Controlify, your settings are preserved.
 
+HUD
+Gameplay corner button hints are hidden to keep the minimap clear. Inventory,
+menu and radial-menu prompts remain available. You can re-enable gameplay hints
+in Controlify settings; later changes to this preference are preserved.
+
 CAMERA AND DETECTION
 Controlify's stock analog camera and device calibration are used, without a
 custom camera curve, added smoothing or mouse emulation. Complete calibration
