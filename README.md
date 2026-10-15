@@ -4,13 +4,13 @@ Pinned client setup for Minecraft 1.20.1 / Fabric 0.15.7.
 
 ## New install â€” start here
 
-**[Download the fresh-install Prism ZIP](https://raw.githubusercontent.com/aidendavidk/family-minecraft-pack/main/dist/FamilyEdition-Fresh-Install.zip)**
+**[Download the fresh-install Prism ZIP](https://raw.githubusercontent.com/aidendavidk/family-minecraft-pack/main/dist/KnowlesCraft-Fresh-Install.zip)**
 
-This is the file for someone who does **not** already have the Family Edition installed. It is a Prism-importable ZIP; the tested mods and managed settings download automatically from this repository on first launch.
+This is the file for someone who does **not** already have KnowlesCraft installed. It is a Prism-importable ZIP; the tested mods and managed settings download automatically from this repository on first launch.
 
 1. Install Prism Launcher and sign in with the Microsoft account that owns Minecraft Java Edition.
 2. Download the ZIP above. **Do not unzip it.**
-3. In Prism choose **Add Instance > Import** and select `FamilyEdition-Fresh-Install.zip`.
+3. In Prism choose **Add Instance > Import** and select `KnowlesCraft-Fresh-Install.zip`.
 4. Launch normally. The first launch can take a few minutes while the current tested pack downloads.
 5. Open **Multiplayer** and join the included **KnowlesCraft** entry.
 
