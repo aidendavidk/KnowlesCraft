@@ -1,0 +1,42 @@
+package family.settings;
+import java.nio.file.*;
+import java.util.*;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.minecraft.class_2561;
+
+/** Local help: no server permission or chat broadcast required. */
+public final class KnowlesCraftHelp implements ClientModInitializer {
+ public void onInitializeClient(){
+  ClientCommandRegistrationCallback.EVENT.register((dispatcher,registries)->{
+   dispatcher.register(ClientCommandManager.literal("knowlescraft").executes(c->{show(c.getSource()::sendFeedback,"help");return 1;})
+    .then(ClientCommandManager.literal("help").executes(c->{show(c.getSource()::sendFeedback,"help");return 1;}))
+    .then(ClientCommandManager.literal("controls").executes(c->{show(c.getSource()::sendFeedback,"controls");return 1;}))
+    .then(ClientCommandManager.literal("controller").executes(c->{show(c.getSource()::sendFeedback,"controller");return 1;}))
+    .then(ClientCommandManager.literal("deck").executes(c->{show(c.getSource()::sendFeedback,"deck");return 1;}))
+    .then(ClientCommandManager.literal("voice").executes(c->{show(c.getSource()::sendFeedback,"voice");return 1;})));
+  });
+ }
+ static void show(java.util.function.Consumer<class_2561> output,String topic){
+  for(String line:lines(FabricLoader.getInstance().getGameDir(),topic))output.accept(class_2561.method_43470(line));
+ }
+ static List<String> lines(Path game,String topic){
+  Map<String,String> keys=new HashMap<>();
+  try{for(String line:Files.readAllLines(game.resolve("options.txt"))){int colon=line.indexOf(':');if(colon>0&&line.startsWith("key_"))keys.put(line.substring(4,colon),line.substring(colon+1));}}catch(Exception ignored){}
+  String voice=key(keys,"key.plasmovoice.settings","V"),map=key(keys,"key.journeymap.map_toggle_alt","J"),zoom=key(keys,"zoomify.key.zoom","C"),bag=key(keys,"key.travelersbackpack.inventory","B");
+  if(topic.equals("controller"))return List.of("KnowlesCraft · Controller","Connect a gamepad for controller prompts; disconnect for keyboard/mouse mode.","A: jump · Y: inventory · X: offhand · B: drop/close · Menu: pause","D-pad: up = map, down = backpack, right = voice, left = pick block.","Hold View/Back + Y for other mod controls, + X for perspective, + RB for player list.","Hold View/Back + left for zoom, + up for Create tool menu, + down for waypoint, + right for chat.","Inventories: A takes stack · X takes one · Y quick-moves. Trackpad/mouse works too.","Controller bindings are editable in Options → Controls → Controller. See KnowlesCraft-Controls.txt for the full layout.");
+  if(topic.equals("deck"))return List.of("KnowlesCraft · Steam Deck","Gaming Mode: choose Steam Input's Gamepad with Mouse Trackpad template for your Prism shortcut.","Optional back buttons: L4 = V (voice), R4 = B (backpack), L5 = Left Alt (Create), R5 = J (map).","Right trackpad = mouse/left click; optional left trackpad = scroll/middle click. Steam+X opens the keyboard.","Deck presets apply once: LCD 60 FPS cap, OLED 90 FPS cap; 12 chunks, fast graphics, shaders off.","You can change those settings afterward. Windows, macOS and other Linux PCs keep their graphics settings.");
+  if(topic.equals("voice"))return List.of("KnowlesCraft · Voice chat","Voice settings: "+voice+". Select your microphone and speakers there.","Choose Push to Talk or Voice Activation in voice settings; check Controls for your talk key.","Nearby players hear you through proximity chat. Use headphones to avoid echo.","Steam Deck uses the compatible Java voice codec automatically.");
+  if(topic.equals("controls"))return List.of("KnowlesCraft · Your controls","Voice settings: "+voice+" · Full map: "+map,"Zoom: "+zoom+" · Backpack: "+bag,"Options → Controls → Key Binds shows every binding and any conflicts.","Steam Deck: your Steam controller layout maps buttons to these keys.");
+  return List.of("KnowlesCraft · Quick help","/knowlescraft controls — your current useful keys","/knowlescraft voice — microphone and proximity chat setup","/knowlescraft controller — gamepad controls · /knowlescraft deck — Steam Deck setup","Prism checks pack updates before Minecraft opens. Relaunch to get new updates.","Use the same KnowlesCraft server entry at home or away; relaunch after changing networks.");
+ }
+ static String key(Map<String,String> keys,String name,String fallback){
+  String value=keys.get(name);if(value==null)return fallback+" (default)";
+  if(value.equals("key.keyboard.unknown"))return "Unbound";
+  if(value.startsWith("key.keyboard."))return value.substring(13).replace('.',' ').toUpperCase(Locale.ROOT);
+  if(value.startsWith("key.mouse."))return "Mouse "+value.substring(10).replace('.',' ');
+  return value;
+ }
+}

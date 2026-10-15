@@ -106,7 +106,7 @@ metafile = true
 
 [[files]]
 file = "mods/family-settings.pw.toml"
-hash = "466ed367992f544dbea7fb30bd0355ac99bc21382b405d5bfa06df8eb4077693"
+hash = "a644155d006b5be48fe7ec5c4239af1c5df7639dd136f1aa7b9949880e5fd142"
 metafile = true
 
 [[files]]
@@ -398,3 +398,12 @@ metafile = true
 file = "mods/zoomify.pw.toml"
 hash = "9d36fa0b4d60d578da370cd05ff415c9f8b6b2b45848ed30a0977f5c62314981"
 metafile = true
+
+[[files]]
+file = "mods/midnightcontrols.pw.toml"
+hash = "3d3eb44ba65ae77df2ff7e26b00790a7db4c4dff8e009720fa49fb97a14cdd90"
+metafile = true
+
+[[files]]
+file = "KnowlesCraft-Controls.txt"
+hash = "a23c702b4059b73d28cac8e722b9345d37dae54e85670284e48399dbf3413e17"

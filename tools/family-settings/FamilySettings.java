@@ -13,9 +13,66 @@ public final class FamilySettings implements PreLaunchEntrypoint {
     static final String HOST="knowlescraft.duckdns.org";
     static final String LAN="10.0.0.133";
     public void onPreLaunch(){
+        applyDeckVoice(System.getProperty("os.name",""),Path.of("/sys/devices/virtual/dmi/id"));
         Path game=FabricLoader.getInstance().getGameDir();
+        try{applyClientDefaults(game,System.getProperty("os.name",""),Path.of("/sys/devices/virtual/dmi/id"));}catch(Exception e){System.err.println("[KnowlesCraft] Client defaults could not be applied: "+e.getClass().getSimpleName());}
         try{applyVoice(FabricLoader.getInstance().getConfigDir().resolve("plasmovoice/client.toml"));}catch(Exception e){System.err.println("[KnowlesCraft] Voice preference could not be applied.");}
         try{migrate(game);}catch(Exception e){System.err.println("[KnowlesCraft] Saved server could not be updated: "+e.getClass().getSimpleName());}
+    }
+    static boolean isSteamDeck(String os,Path dmi){
+        if(!os.toLowerCase(Locale.ROOT).contains("linux"))return false;
+        try{
+            String vendor=Files.readString(dmi.resolve("sys_vendor")).strip();
+            String model=Files.readString(dmi.resolve("product_name")).strip();
+            return vendor.equalsIgnoreCase("Valve")&&(model.equalsIgnoreCase("Jupiter")||model.equalsIgnoreCase("Galileo"));
+        }catch(IOException|SecurityException e){return false;}
+    }
+    static void applyClientDefaults(Path game,String os,Path dmi)throws Exception{
+        boolean deck=isSteamDeck(os,dmi);Path config=game.resolve("config/midnightcontrols.json");
+        if(!Files.exists(config)){
+            try(InputStream in=FamilySettings.class.getResourceAsStream("/knowlescraft/controller-defaults.json")){
+                if(in==null)throw new IOException("Controller defaults missing");
+                String defaults=new String(in.readAllBytes(),StandardCharsets.UTF_8);
+                if(deck)defaults=defaults.replace("\"controllerType\": \"DEFAULT\"","\"controllerType\": \"XBOX\"");
+                Files.createDirectories(config.getParent());Files.writeString(config,defaults,StandardOpenOption.CREATE_NEW);
+            }
+        }
+        if(!deck)return;
+        Path marker=game.resolve("config/knowlescraft/deck-preset-v1.applied");if(Files.exists(marker))return;
+        boolean oled=Files.readString(dmi.resolve("product_name")).strip().equalsIgnoreCase("Galileo");
+        Files.createDirectories(marker.getParent());
+        Path options=game.resolve("options.txt");String before=Files.exists(options)?Files.readString(options):"version:3465\n";
+        Path saved=marker.getParent().resolve("options.before-deck-preset.txt");if(!Files.exists(saved))Files.writeString(saved,before);
+        Map<String,String> preset=new LinkedHashMap<>();
+        preset.put("maxFps",oled?"90":"60");preset.put("enableVsync","false");preset.put("renderDistance","12");preset.put("simulationDistance","6");
+        preset.put("graphicsMode","0");preset.put("renderClouds","false");preset.put("particles","1");preset.put("entityDistanceScaling","1.0");preset.put("guiScale","2");preset.put("autoJump","false");
+        String after=before;
+        for(var entry:preset.entrySet())after=option(after,entry.getKey(),entry.getValue());
+        // These keyboard collisions matter when Deck paddles send real keyboard events.
+        if(!after.contains("key_key.journeymap.create_waypoint:")||after.contains("key_key.journeymap.create_waypoint:key.keyboard.b"))after=option(after,"key_key.journeymap.create_waypoint","key.keyboard.u");
+        if(!after.contains("key_treechop.key.open_settings_overlay:")||after.contains("key_treechop.key.open_settings_overlay:key.keyboard.n"))after=option(after,"key_treechop.key.open_settings_overlay","key.keyboard.f8");
+        atomicWrite(options,after);
+        Path iris=game.resolve("config/iris.properties");String irisBefore=Files.exists(iris)?Files.readString(iris):"";
+        Path irisSaved=marker.getParent().resolve("iris.before-deck-preset.properties");if(!Files.exists(irisSaved))Files.writeString(irisSaved,irisBefore);
+        String irisAfter=irisBefore.replaceAll("(?m)^enableShaders=[^\\r\\n]*","enableShaders=false");
+        if(!irisAfter.contains("enableShaders="))irisAfter+="\nenableShaders=false\n";atomicWrite(iris,irisAfter);
+        Files.writeString(marker,(oled?"Steam Deck OLED · 90 FPS cap":"Steam Deck LCD · 60 FPS cap")+"\nDefaults applied once; later changes are yours.\n");
+        System.out.println("[KnowlesCraft] Applied "+(oled?"OLED 90":"LCD 60")+" FPS Deck preset. Future launches preserve your changes.");
+    }
+    static String option(String text,String key,String value){
+        java.util.regex.Pattern p=java.util.regex.Pattern.compile("(?m)^"+java.util.regex.Pattern.quote(key)+":[^\\r\\n]*");
+        var match=p.matcher(text);String line=key+":"+value;
+        return match.find()?match.replaceAll(java.util.regex.Matcher.quoteReplacement(line)):text+(text.endsWith("\n")?"":"\n")+line+"\n";
+    }
+    static void atomicWrite(Path path,String text)throws IOException{
+        Files.createDirectories(path.getParent());Path temp=Files.createTempFile(path.getParent(),"knowlescraft-",".tmp");
+        try{Files.writeString(temp,text);Files.move(temp,path,StandardCopyOption.REPLACE_EXISTING,StandardCopyOption.ATOMIC_MOVE);}finally{Files.deleteIfExists(temp);}
+    }
+    static void applyDeckVoice(String os,Path dmi){
+        if(isSteamDeck(os,dmi)&&System.getProperty("plasmovoice.disable_natives")==null){
+            System.setProperty("plasmovoice.disable_natives","true");
+            System.out.println("[KnowlesCraft] Steam Deck detected; using Java voice codecs.");
+        }
     }
     static void applyVoice(Path path)throws Exception{
         Files.createDirectories(path.getParent());String before=Files.exists(path)?Files.readString(path):"";
