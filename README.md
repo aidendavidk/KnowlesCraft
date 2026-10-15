@@ -14,8 +14,6 @@ This is the file for someone who does **not** already have KnowlesCraft installe
 4. Launch normally. The first launch can take a few minutes while the current tested pack downloads.
 5. Open **Multiplayer** and join the included **KnowlesCraft** entry.
 
-You should not need to manually choose or configure a Java version for this pack in Prism.
-
 Do **not** use GitHub's **Code > Download ZIP** button; that downloads the repository source, not the Minecraft instance.
 
 ## Current release: 1.0.3
