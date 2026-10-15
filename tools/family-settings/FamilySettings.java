@@ -1,6 +1,7 @@
 package family.settings;
 
 import java.io.*;
+import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.*;
@@ -10,6 +11,7 @@ import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 
 public final class FamilySettings implements PreLaunchEntrypoint {
     static final String HOST="knowlescraft.duckdns.org";
+    static final String LAN="10.0.0.133";
     public void onPreLaunch(){
         Path game=FabricLoader.getInstance().getGameDir();
         try{applyVoice(FabricLoader.getInstance().getConfigDir().resolve("plasmovoice/client.toml"));}catch(Exception e){System.err.println("[KnowlesCraft] Voice preference could not be applied.");}
@@ -21,6 +23,25 @@ public final class FamilySettings implements PreLaunchEntrypoint {
         if(!after.equals(before))Files.writeString(path,after);
     }
     static void migrate(Path game)throws Exception{
+        migrate(game,chooseAddress());
+    }
+    static String chooseAddress(){return isOurServer(LAN,25565)?LAN:HOST;}
+    static boolean isOurServer(String host,int port){
+        try(Socket socket=new Socket()){
+            socket.connect(new InetSocketAddress(host,port),700);socket.setSoTimeout(900);
+            ByteArrayOutputStream handshake=new ByteArrayOutputStream();DataOutputStream body=new DataOutputStream(handshake);
+            varInt(body,0);varInt(body,763);byte[] name=HOST.getBytes(StandardCharsets.UTF_8);varInt(body,name.length);body.write(name);body.writeShort(port);varInt(body,1);
+            DataOutputStream out=new DataOutputStream(socket.getOutputStream());varInt(out,handshake.size());out.write(handshake.toByteArray());out.write(new byte[]{1,0});out.flush();
+            DataInputStream in=new DataInputStream(socket.getInputStream());int packet=varInt(in);if(packet<1||packet>1048576||varInt(in)!=0)return false;
+            int size=varInt(in);if(size<1||size>1048576)return false;byte[] bytes=in.readNBytes(size);if(bytes.length!=size)return false;
+            String status=new String(bytes,StandardCharsets.UTF_8);
+            return status.contains("KnowlesCraft")&&status.matches("(?s).*\\\"protocol\\\"\\s*:\\s*763(?:[,}]).*");
+        }catch(Exception e){return false;}
+    }
+    static void varInt(DataOutputStream out,int value)throws IOException{do{int b=value&127;value>>>=7;out.writeByte(value==0?b:b|128);}while(value!=0);}
+    static int varInt(DataInputStream in)throws IOException{int value=0;for(int shift=0;shift<35;shift+=7){int b=in.readUnsignedByte();value|=(b&127)<<shift;if((b&128)==0)return value;}throw new IOException("Invalid packet length");}
+    static void migrate(Path game,String destination)throws Exception{
+        if(!Set.of(HOST,LAN).contains(destination))throw new IllegalArgumentException("Unknown connection route");
         Path path=game.resolve("servers.dat");Tag root;String rootName="";boolean compressed=false;byte[] original=null;
         if(Files.exists(path)){
             original=Files.readAllBytes(path);if(original.length>8*1024*1024)throw new IOException("Server list unexpectedly large");
@@ -38,11 +59,13 @@ public final class FamilySettings implements PreLaunchEntrypoint {
             boolean publicAddress=ip.equals("73.109.48.125")||ip.equals("73.109.48.125:25565")||ip.equals(HOST)||ip.equals(HOST+":25565");
             boolean factory=name.startsWith("Family Server")||name.equals("Family Create and Explore")||name.startsWith("Create and Explore - Family Edition")||name.startsWith("KnowlesCraft");
             if(!publicAddress&&!factory)continue;
-            String newIp=local||home?ip:HOST,newName=local?"KnowlesCraft (this computer)":home?"KnowlesCraft (home Wi-Fi)":"KnowlesCraft";
-            if(!local&&!home)publicFound=true;
+            boolean managed=values.containsKey("knowlescraftManaged")||name.equals("KnowlesCraft")&&(publicAddress||home);
+            boolean main=managed||!local&&!home;
+            String newIp=main?destination:ip,newName=main?"KnowlesCraft":local?"KnowlesCraft (this computer)":"KnowlesCraft (home Wi-Fi)";
+            if(main){publicFound=true;if(!values.containsKey("knowlescraftManaged")){values.put("knowlescraftManaged",new Tag(1,(byte)1));changed=true;}}
             if(!newIp.equals(ip)||!newName.equals(name)){values.put("ip",new Tag(8,newIp));values.put("name",new Tag(8,newName));changed=true;}
         }
-        if(!publicFound){Map<String,Tag> added=new LinkedHashMap<>();added.put("name",new Tag(8,"KnowlesCraft"));added.put("ip",new Tag(8,HOST));entries.add(new Tag(10,added));changed=true;}
+        if(!publicFound){Map<String,Tag> added=new LinkedHashMap<>();added.put("name",new Tag(8,"KnowlesCraft"));added.put("ip",new Tag(8,destination));added.put("knowlescraftManaged",new Tag(1,(byte)1));entries.add(new Tag(10,added));changed=true;}
         if(changed){
             if(original!=null){Path backup=game.resolve("servers.dat.before-knowlescraft");if(!Files.exists(backup))Files.write(backup,original);}
             ByteArrayOutputStream bytes=new ByteArrayOutputStream();try(DataOutputStream out=new DataOutputStream(compressed?new GZIPOutputStream(bytes):bytes)){out.writeByte(10);out.writeUTF(rootName);write(out,root);}
