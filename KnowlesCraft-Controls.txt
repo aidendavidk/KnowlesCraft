@@ -2,7 +2,7 @@ KnowlesCraft controller controls
 
 Controller support is included on every computer. Connect a gamepad to switch to
 controller prompts; disconnect it to return to keyboard/mouse mode. Controller
-type is detected automatically. Steam Deck uses Xbox-style ABXY prompts.
+type is detected automatically. Prompts follow the connected controller, including on Steam Deck.
 
 STANDARD GAMEPAD
 Left stick: move; click to sprint. Right stick: look; click to toggle sneak.
