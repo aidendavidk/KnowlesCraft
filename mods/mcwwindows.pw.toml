@@ -1,0 +1,8 @@
+name = "Macaw's Windows"
+filename = "mcw-windows-2.2.1-mc1.20.1fabric.jar"
+side = "client"
+
+[download]
+url = "https://cdn.modrinth.com/data/C7I0BCni/versions/qfD1I3R7/mcw-windows-2.2.1-mc1.20.1fabric.jar"
+hash-format = "sha512"
+hash = "42d87438918fa01ce5ace1d7c19f22d03cf89fa5e15992888e235cf0a518e989026d210bf2adfcf27ad1d0027f1ef2529acf8a4a26d9d9d98f6b88006a3fbe9f"

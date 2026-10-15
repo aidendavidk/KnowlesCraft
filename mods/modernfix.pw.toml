@@ -1,0 +1,8 @@
+name = "ModernFix"
+filename = "modernfix-fabric-5.16.1+mc1.20.1.jar"
+side = "client"
+
+[download]
+url = "https://cdn.modrinth.com/data/nmDcB62a/versions/caijz5kw/modernfix-fabric-5.16.1%2Bmc1.20.1.jar"
+hash-format = "sha512"
+hash = "afc278714ff3952264b63960c099da894b403e8430ab9184aec688219a5bc4f0a454934cc14f145117ee329cf110895ec76100d51d32cb52e55c98357a475ca9"

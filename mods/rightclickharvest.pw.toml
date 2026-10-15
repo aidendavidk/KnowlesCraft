@@ -1,0 +1,8 @@
+name = "Right Click Harvest"
+filename = "right-click-harvest-3.2.3+1.19.x-1.20.1-fabric.jar"
+side = "client"
+
+[download]
+url = "https://edge.forgecdn.net/files/4690/489/right-click-harvest-3.2.3%2B1.19.x-1.20.1-fabric.jar"
+hash-format = "sha512"
+hash = "c8c1adaf16213ba2e68ca63d64bd2bd0908188f53afc08717efe7becf1bb1a59921a5ad33650f1b3088cff9ec490b806eab6e93bad2613477f698926530f75ae"

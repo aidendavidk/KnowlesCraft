@@ -1,0 +1,8 @@
+name = "cupboard"
+filename = "cupboard-fabric-1.20.1-2.6.jar"
+side = "client"
+
+[download]
+url = "https://edge.forgecdn.net/files/5170/317/cupboard-fabric-1.20.1-2.6.jar"
+hash-format = "sha512"
+hash = "a43176fefc2db3e2e4461ac7f1111c63fe30280de25dd553bbf02c253c45c318069fcd6f9085800e2b5d0b8b2251bd70b2b767f75542c5b86d94dfb1e25e075c"

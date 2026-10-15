@@ -1,0 +1,8 @@
+name = "Macaw's Fences and Walls"
+filename = "mcw-fences-1.1.1-mc1.20.1fabric.jar"
+side = "client"
+
+[download]
+url = "https://cdn.modrinth.com/data/GmwLse2I/versions/lYhF5HZw/mcw-fences-1.1.1-mc1.20.1fabric.jar"
+hash-format = "sha512"
+hash = "a63d79b926c31f26209f19ededaded5455e6e806231e1e00d8549a90b4153d1518e40710e64b93c36088bc2b67bfbf03c3ae163183e4e0b9188d4ddd90f93abe"

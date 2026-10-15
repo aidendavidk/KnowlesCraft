@@ -1,0 +1,8 @@
+name = "Better FPS distance Mod"
+filename = "betterfpsdist-fabric-1.20.1-4.3.jar"
+side = "client"
+
+[download]
+url = "https://edge.forgecdn.net/files/5136/724/betterfpsdist-fabric-1.20.1-4.3.jar"
+hash-format = "sha512"
+hash = "0ba82fb274d7f4e1812d59e7092934424768f24ee1bd47c16e2091d99ea7e1d37e9d2dd66f0a1935db6c2a82a11bc02a662384a0bd2a939fc04a50fb7d07769a"

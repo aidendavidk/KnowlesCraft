@@ -1,0 +1,8 @@
+name = "GeckoLib 4"
+filename = "geckolib-fabric-1.20.1-4.4.4.jar"
+side = "client"
+
+[download]
+url = "https://edge.forgecdn.net/files/5188/421/geckolib-fabric-1.20.1-4.4.4.jar"
+hash-format = "sha512"
+hash = "eb7aaf2a828c1c572eff3d9107a79d6e8bd97df59180ffd0374b9c685244705e224e20b6a0c98f44894ff81fd5ca93f9bec7457ff437532e48ecf9f26b0c1092"

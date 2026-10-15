@@ -1,0 +1,8 @@
+name = "What Are They Up To"
+filename = "watut-fabric-1.20.1-1.1.1.jar"
+side = "client"
+
+[download]
+url = "https://cdn.modrinth.com/data/AtB5mHky/versions/nbHfJbTd/watut-fabric-1.20.1-1.1.1.jar"
+hash-format = "sha512"
+hash = "7603c7624e250e20f935548ee694768eb1224bd9d9738c15299c20ea024378a1d92a1aed3e19f4d4e5b3dfb706a7cfd2e4ca9bc394cab5d36531dfc6f8fc3b5d"

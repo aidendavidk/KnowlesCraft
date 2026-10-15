@@ -1,0 +1,8 @@
+name = "AzureLib"
+filename = "azurelib-fabric-1.20.1-2.0.20.jar"
+side = "client"
+
+[download]
+url = "https://cdn.modrinth.com/data/7zlUOZvb/versions/9jOJreJb/azurelib-fabric-1.20.1-2.0.20.jar"
+hash-format = "sha512"
+hash = "6ebbd5db4e5b9a2769b5d34426461b57c14782af82a626f90e75d17935facbe456ba5bd1aeb14e8aeab038913ff3424f9043a3c32cc8b669e19bf2caa93ab02d"

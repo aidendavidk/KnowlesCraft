@@ -1,0 +1,8 @@
+name = "Create: Steam 'n' Rails"
+filename = "Steam_Rails-1.6.3+fabric-mc1.20.1.jar"
+side = "client"
+
+[download]
+url = "https://cdn.modrinth.com/data/ZzjhlDgM/versions/tTebgWv2/Steam_Rails-1.6.3%2Bfabric-mc1.20.1.jar"
+hash-format = "sha512"
+hash = "ff4616e46e2be432ef992a7e38e416011b846c523983e7a6ca3535b21ac1f8a23b63bf7d6d841a29af2976eb02fe939f3b5505b462fd4ce75526d8bec8870fa0"

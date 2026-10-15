@@ -1,0 +1,8 @@
+name = "Farmer's Delight"
+filename = "FarmersDelight-1.20.1-2.0.17+refabricated.jar"
+side = "client"
+
+[download]
+url = "https://cdn.modrinth.com/data/7vxePowz/versions/Qid8WxOf/FarmersDelight-1.20.1-2.0.17%2Brefabricated.jar"
+hash-format = "sha512"
+hash = "9ed03d46f212fbe65aea5b01a46a78edd7355b66e6a4496c6cce849fe67fac700dd9ad98f0183fa6a92e5983749930cb9e09f3a65a75ffbc317f6287f76f3589"

@@ -1,0 +1,8 @@
+name = "Simply Light"
+filename = "simplylight-fabric-1.20.1-1.4.5.jar"
+side = "client"
+
+[download]
+url = "https://edge.forgecdn.net/files/4638/134/simplylight-fabric-1.20.1-1.4.5.jar"
+hash-format = "sha512"
+hash = "f9ed92e11412c5494250cba6cc35d8826c5670fdee5c93fe9277857a9dfc62739d10400d0e29fbc5ac10782a5cb479e7189c9f17d80da4f7e9a2cac2867e0587"

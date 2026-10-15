@@ -1,0 +1,8 @@
+name = "Hamsters"
+filename = "hamsters-fabric-1.0.3-1.20.1.jar"
+side = "client"
+
+[download]
+url = "https://cdn.modrinth.com/data/sRzS8pFG/versions/xwhK0c6Z/hamsters-fabric-1.0.3-1.20.1.jar"
+hash-format = "sha512"
+hash = "a0d31a3f5795d5d57861de99cc6ee759b9137dc4e34f9f149b4cf60f8ca99277f63eb4322c76a2b568fb730e3271700457c14be32c5399681415240b44e3491e"
