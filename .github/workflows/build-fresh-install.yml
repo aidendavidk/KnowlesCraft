@@ -67,7 +67,8 @@ jobs:
           VERSION="$(python3 -c 'import tomllib; print(tomllib.load(open("pack.toml", "rb"))["version"])')"
           TAG="v$VERSION"
           if gh release view "$TAG" >/dev/null 2>&1; then
-            echo "Release $TAG already published; preserving its download."
+            gh release upload "$TAG" dist/KnowlesCraft.zip --clobber
+            echo "Updated the KnowlesCraft installer on release $TAG."
             exit 0
           fi
           cat > build/release-notes.md <<'NOTES'
