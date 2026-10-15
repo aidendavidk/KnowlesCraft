@@ -1,0 +1,53 @@
+name: Build fresh install ZIP
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'fresh-install/**'
+      - 'setup/FamilyEdition-Enable-AutoUpdates.zip'
+      - '.github/workflows/build-fresh-install.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Assemble Prism import ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf build dist
+          mkdir -p build/.minecraft dist bootstrap
+          cp fresh-install/instance.cfg build/
+          cp fresh-install/mmc-pack.json build/
+          cp fresh-install/START-HERE.txt build/
+          if [ -d fresh-install/.minecraft ]; then
+            cp -a fresh-install/.minecraft/. build/.minecraft/
+          fi
+          unzip -q setup/FamilyEdition-Enable-AutoUpdates.zip -d bootstrap
+          BOOTSTRAP_JAR="$(find bootstrap -type f -name 'packwiz-installer-bootstrap.jar' -print -quit)"
+          test -n "$BOOTSTRAP_JAR"
+          cp "$BOOTSTRAP_JAR" build/.minecraft/packwiz-installer-bootstrap.jar
+          (cd build && zip -qr ../dist/FamilyEdition-Fresh-Install.zip .)
+
+      - name: Publish generated ZIP to repository
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f dist/FamilyEdition-Fresh-Install.zip
+          if git diff --cached --quiet; then
+            echo 'Fresh-install ZIP already current.'
+            exit 0
+          fi
+          git commit -m 'Build fresh-install Prism ZIP [skip ci]'
+          git push
