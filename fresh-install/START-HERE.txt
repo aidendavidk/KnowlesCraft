@@ -2,8 +2,10 @@ KNOWLESCRAFT
 
 1. Install Prism Launcher and sign in with the Microsoft account that owns Minecraft Java Edition.
 2. Choose Add Instance > Import and select KnowlesCraft.zip. Do not unzip it first.
-3. Launch KnowlesCraft. The included updater downloads the pack on first launch and checks for updates on later launches.
+3. Select KnowlesCraft and click Launch.
 4. Open Multiplayer and join KnowlesCraft.
+
+Setup and updates run automatically before Minecraft opens. Allow a few extra minutes the first time.
 
 Create machinery is optional: ordinary Minecraft tools, farming, building, mining and exploration still work.
 
