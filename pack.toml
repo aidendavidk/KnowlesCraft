@@ -1,12 +1,12 @@
 name = "KnowlesCraft"
 author = "Family server"
-version = "1.0.22"
+version = "1.0.23"
 pack-format = "packwiz:1.1.0"
 
 [index]
 file = "index.toml"
 hash-format = "sha256"
-hash = "d0aa1a94bb0a0113e361ee9700e5976cb43b395cdaae5b21427bcd0c986d4217"
+hash = "08d1b9e6fbee113426a91fca07c7596a8f4f83c72e6b781a6dcff7e2b03773a0"
 
 [versions]
 minecraft = "1.20.1"

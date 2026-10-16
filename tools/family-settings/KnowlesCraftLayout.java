@@ -28,18 +28,42 @@ public final class KnowlesCraftLayout implements EmiPlugin {
   if(installed)return;installed=true;
   ScreenEvents.AFTER_INIT.register((mc,screen,width,height)->{
    ScreenEvents.beforeRender(screen).register((s,context,x,y,delta)->layout(s,true));
-   ScreenEvents.afterRender(screen).register((s,context,x,y,delta)->renderGuides(s,context,delta));
+
   });
+ }
+ private static AbstractContainerScreenProcessor<?> containerProcessor(class_437 screen)throws IllegalAccessException{
+  var provided=ScreenProcessorProvider.provide(screen);
+  if(provided instanceof AbstractContainerScreenProcessor<?> container)return container;
+  // RecipeBookScreenProcessor replaces the provider, but the inherited container
+  // processor still holds the slot guide definitions. Do not run its input handler.
+  for(Class<?> type=screen.getClass();type!=null;type=type.getSuperclass())for(var f:type.getDeclaredFields()){
+   if(AbstractContainerScreenProcessor.class.isAssignableFrom(f.getType())){
+    f.setAccessible(true);return (AbstractContainerScreenProcessor<?>)f.get(screen);
+   }
+  }
+  return null;
+ }
+ @SuppressWarnings("unchecked")
+ private static void updateRecipeGuides(class_437 screen,AbstractContainerScreenProcessor<?> processor,PositionedComponent<?> left,PositionedComponent<?> right)throws Exception{
+  if(ScreenProcessorProvider.provide(screen)==processor)return;
+  var slotField=field(AbstractContainerScreenProcessor.class,"hoveredSlot");
+  var slot=((java.util.function.Supplier<class_1735>)slotField.get(processor)).get();
+  var container=(class_465<?>)screen;var accessor=(AbstractContainerScreenAccessor)screen;
+  var mouse=Controlify.instance().virtualMouseHandler();
+  var ctx=new dev.isxander.controlify.gui.guide.ContainerGuideCtx(slot,container.method_17577().method_34255(),accessor.invokeHasClickedOutside(mouse.getCurrentX(1),mouse.getCurrentY(1),accessor.getLeftPos(),accessor.getTopPos(),0));
+  for(var position:List.of(left,right))if(position.getComponent() instanceof ColumnLayoutComponent<?> column)
+   for(var child:column.getChildComponents())if(child instanceof RowLayoutComponent<?> row)
+    for(var action:row.getChildComponents())if(action instanceof GuideActionRenderer<?> guide)((GuideActionRenderer<dev.isxander.controlify.gui.guide.ContainerGuideCtx>)guide).updateName(ctx);
  }
  private static boolean guidesEnabled(){
   var api=Controlify.instance();
   return api!=null&&api.currentInputMode().isController()&&api.getCurrentController().map(c->c.genericConfig().config().showScreenGuides).orElse(false);
  }
- private static void renderGuides(class_437 screen,class_332 context,float delta){
+ public static void renderGuides(class_437 screen,class_332 context,float delta){
   if(!(screen instanceof class_465<?>)||!guidesEnabled())return;
   try{
-   var processor=ScreenProcessorProvider.provide(screen);
-   if(!(processor instanceof AbstractContainerScreenProcessor<?>))return;
+   var processor=containerProcessor(screen);
+   if(processor==null)return;
    var left=(PositionedComponent<?>)LEFT.get(processor);var right=(PositionedComponent<?>)RIGHT.get(processor);
    if(left!=null)left.renderComponent(context,delta);
    if(right!=null)right.renderComponent(context,delta);
@@ -91,22 +115,23 @@ public final class KnowlesCraftLayout implements EmiPlugin {
  public static List<Bounds> layout(class_437 screen,boolean recalculate){
   if(!(screen instanceof class_465<?> container))return List.of();
   try{
-   var processor=ScreenProcessorProvider.provide(screen);
-   if(!(processor instanceof AbstractContainerScreenProcessor<?>))return List.of();
+   var processor=containerProcessor(screen);
+   if(processor==null)return List.of();
    var left=(PositionedComponent<?>)LEFT.get(processor);var right=(PositionedComponent<?>)RIGHT.get(processor);
    if(left==null||right==null){
     if(!guidesEnabled())return List.of();
     processor.onWidgetRebuild();left=(PositionedComponent<?>)LEFT.get(processor);right=(PositionedComponent<?>)RIGHT.get(processor);
     if(left==null||right==null)return List.of();
    }
+   if(guidesEnabled())updateRecipeGuides(screen,processor,left,right);
    var pair=PAIRS.get(processor);
    if(pair==null||left!=pair.originalLeft&&left!=pair.normalLeft&&left!=pair.compactLeft){
-    pair=new Pair(left,right,position(left,false,false),position(right,true,false),position(left,false,true),position(right,true,true));PAIRS.put(processor,pair);
+    pair=new Pair(left,right,position(left,false,true),position(right,true,false),position(left,false,true),position(right,true,true));PAIRS.put(processor,pair);
    }
-   boolean active=guidesEnabled()&&!EmiScreenManager.isDisabled();
+   boolean active=guidesEnabled();
    int toolbar=screen.field_22790;
    for(class_339 widget:new class_339[]{EmiScreenManager.search,EmiScreenManager.emi,EmiScreenManager.tree})if(widget!=null&&widget.field_22764&&widget.method_46427()>screen.field_22790/2)toolbar=Math.min(toolbar,widget.method_46427());
-   active&=toolbar<screen.field_22790;
+
    if(active)hideDuplicateDrop(pair);
    int bottom=toolbar-4,primary=primaryHeight(pair);
    pair.normalLeft.updatePosition(screen.field_22789,bottom);placeRight(pair.normalRight,screen.field_22789,bottom,primary);
