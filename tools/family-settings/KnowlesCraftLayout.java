@@ -57,6 +57,15 @@ public final class KnowlesCraftLayout implements EmiPlugin {
   for(var position:List.of(left,right))if(position.getComponent() instanceof ColumnLayoutComponent<?> column)
    for(var child:column.getChildComponents())if(child instanceof RowLayoutComponent<?> row)
     for(var action:row.getChildComponents())if(action instanceof GuideActionRenderer<?> guide)((GuideActionRenderer<dev.isxander.controlify.gui.guide.ContainerGuideCtx>)guide).updateName(ctx);
+  if(!held.method_7960()&&ctx.cursorOutsideContainer()){
+   var controller=Controlify.instance().getCurrentController().orElseThrow();
+   var square=dev.isxander.controlify.bindings.ControlifyBindings.INV_TAKE_HALF.on(controller);
+   for(var row:((ColumnLayoutComponent<?>)right.getComponent()).getChildComponents())
+    for(var action:((RowLayoutComponent<?>)row).getChildComponents())if(action instanceof GuideActionRenderer<?> guide){
+     var definition=(dev.isxander.controlify.gui.guide.GuideAction<?>)field(GuideActionRenderer.class,"guideAction").get(guide);
+     if(definition.binding()==square)NAME.set(guide,class_2561.method_43470("Drop One"));
+    }
+  }
   // Slot acceptance alone does not mean two existing stacks can merge.
   if(!held.method_7960()&&slot!=null&&slot.method_7680(held)){
    var column=(ColumnLayoutComponent<?>)left.getComponent();
