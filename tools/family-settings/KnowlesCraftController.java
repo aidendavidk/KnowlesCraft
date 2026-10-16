@@ -9,7 +9,7 @@ import java.util.List;
 
 /** Set up new profiles only; Controlify owns camera response and calibration. */
 public final class KnowlesCraftController implements ControlifyEntrypoint {
- private dev.isxander.controlify.api.bind.InputBindingSupplier mapScreenshot;
+ private dev.isxander.controlify.api.bind.InputBindingSupplier mapScreenshot,touchpadSelect;
  private SelectGesture selectGesture=new SelectGesture();
  private dev.isxander.controlify.controller.ControllerEntity gestureController;
  public void onControlifyInit(ControlifyApi api){
@@ -21,15 +21,20 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
   var bindApi=dev.isxander.controlify.api.bind.ControlifyBindApi.get();
   mapScreenshot=bindApi.registerBinding(builder->builder.id("knowlescraft","map_screenshot")
    .name(net.minecraft.class_2561.method_43470("Map / Hold for Screenshot"))
-   .description(net.minecraft.class_2561.method_43470("Tap to open the map. Hold 0.75 seconds for one screenshot."))
+   .description(net.minecraft.class_2561.method_43470("Tap to open the map. Hold 0.5 seconds for one screenshot."))
    .category(net.minecraft.class_2561.method_43470("KnowlesCraft"))
    .defaultInput(new dev.isxander.controlify.bindings.input.ButtonInput(new class_2960("controlify:button/back")))
+   .allowedContexts(dev.isxander.controlify.bindings.BindContext.IN_GAME));
+  touchpadSelect=bindApi.registerBinding(builder->builder.id("knowlescraft","touchpad_select")
+   .name(net.minecraft.class_2561.method_43470("Touchpad: Map / Hold for Screenshot"))
+   .category(net.minecraft.class_2561.method_43470("KnowlesCraft"))
+   .defaultInput(new dev.isxander.controlify.bindings.input.ButtonInput(dev.isxander.controlify.controller.input.GamepadInputs.TOUCHPAD_1_BUTTON))
    .allowedContexts(dev.isxander.controlify.bindings.BindContext.IN_GAME));
   ControlifyEvents.ACTIVE_CONTROLLER_TICKED.register(event->{
    var controller=event.controller();var mc=net.minecraft.class_310.method_1551();
    if(gestureController!=controller){selectGesture=new SelectGesture();gestureController=controller;}
-   int action=selectGesture.update(mapScreenshot.on(controller).digitalNow(),mc.field_1755==null&&mc.field_1724!=null,System.nanoTime());
-   if(action==1){var binding=controller.input().orElseThrow().getBinding(new class_2960("fabric-key-binding-api-v1:key.journeymap.map_toggle_alt"));if(binding!=null)binding.fakePress();}
+   int action=selectGesture.update(mapScreenshot.on(controller).digitalNow()||touchpadSelect.on(controller).digitalNow(),mc.field_1755==null&&mc.field_1724!=null,System.nanoTime());
+   if(action==1)journeymap.client.ui.UIManager.INSTANCE.openFullscreenMap();
    if(action==2)dev.isxander.controlify.bindings.ControlifyBindings.TAKE_SCREENSHOT.on(controller).fakePress();
   });
   ControlifyEvents.CONTROLLER_DISCONNECTED.register(event->{selectGesture.reset();gestureController=null;});
@@ -84,11 +89,11 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
    if(blocked){if(!pressed)blocked=false;return 0;}
    if(pressed){
     if(!down){down=true;held=false;started=now;}
-    if(!held&&now-started>=750_000_000L){held=true;return 2;}
+    if(!held&&now-started>=500_000_000L){held=true;return 2;}
     return 0;
    }
    if(!down)return 0;
-   down=false;boolean screenshot=held||now-started>=750_000_000L;boolean already=held;held=false;
+   down=false;boolean screenshot=held||now-started>=500_000_000L;boolean already=held;held=false;
    return already?0:screenshot?2:1;
   }
  }
