@@ -9,6 +9,7 @@ import dev.isxander.controlify.screenop.*;
 import dev.isxander.controlify.screenop.compat.vanilla.AbstractContainerScreenProcessor;
 import dev.isxander.controlify.mixins.feature.guide.screen.AbstractContainerScreenAccessor;
 import dev.isxander.controlify.mixins.feature.screenop.ScreenAccessor;
+import dev.isxander.controlify.gui.guide.GuideActionRenderer;
 import dev.emi.emi.api.*;
 import dev.emi.emi.api.widget.Bounds;
 import dev.emi.emi.screen.EmiScreenManager;
@@ -16,7 +17,7 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 
 /** Reserve actual guide bounds in EMI instead of drawing two interfaces together. */
 public final class KnowlesCraftLayout implements EmiPlugin {
- private static final Field LEFT=field(AbstractContainerScreenProcessor.class,"leftLayout"),RIGHT=field(AbstractContainerScreenProcessor.class,"rightLayout"),WIDTH=field(class_465.class,"field_2792"),HEIGHT=field(class_465.class,"field_2779");
+ private static final Field LEFT=field(AbstractContainerScreenProcessor.class,"leftLayout"),RIGHT=field(AbstractContainerScreenProcessor.class,"rightLayout"),WIDTH=field(class_465.class,"field_2792"),HEIGHT=field(class_465.class,"field_2779"),NAME=field(GuideActionRenderer.class,"name");
  private static final Map<ScreenProcessor<?>,Pair> PAIRS=new WeakHashMap<>();
  private static final Map<class_437,List<Bounds>> BOUNDS=new WeakHashMap<>();
  private static boolean installed,warned;
@@ -30,13 +31,41 @@ public final class KnowlesCraftLayout implements EmiPlugin {
  @SuppressWarnings({"rawtypes","unchecked"})
  private static PositionedComponent<?> position(PositionedComponent<?> original,boolean right,boolean compact){
   RenderComponent component=original.getComponent();
+  if(right&&!compact&&component instanceof ColumnLayoutComponent column){
+   var rows=new ArrayList<>(column.getChildComponents());Collections.reverse(rows);
+   var builder=ColumnLayoutComponent.<RenderComponent>builder().spacing(2).colPadding(2).elementPosition(ColumnLayoutComponent.ElementPosition.RIGHT);
+   for(Object row:rows)builder.element((RenderComponent)row);component=builder.build();
+  }
   if(compact&&component instanceof ColumnLayoutComponent column){
    var builder=ColumnLayoutComponent.<RowLayoutComponent<RenderComponent>>builder().spacing(2).colPadding(2).elementPosition(right?ColumnLayoutComponent.ElementPosition.RIGHT:ColumnLayoutComponent.ElementPosition.LEFT);
-   for(Object child:column.getChildComponents())if(child instanceof RowLayoutComponent row)for(Object action:row.getChildComponents())builder.element(RowLayoutComponent.<RenderComponent>builder().rowPadding(0).elementPosition(RowLayoutComponent.ElementPosition.MIDDLE).element((RenderComponent)action).build());
+   var rows=new ArrayList<>(column.getChildComponents());if(right)Collections.reverse(rows);
+   for(Object child:rows)if(child instanceof RowLayoutComponent row)for(Object action:row.getChildComponents())builder.element(RowLayoutComponent.<RenderComponent>builder().rowPadding(0).elementPosition(RowLayoutComponent.ElementPosition.MIDDLE).element((RenderComponent)action).build());
    component=builder.build();
   }
   var anchor=right?AnchorPoint.BOTTOM_RIGHT:AnchorPoint.BOTTOM_LEFT;
   return new PositionedComponent<>(component,anchor,right?-4:4,0,anchor);
+ }
+ private static List<GuideActionRenderer<?>> visibleActions(PositionedComponent<?> position){
+  var result=new ArrayList<GuideActionRenderer<?>>();
+  if(position.getComponent() instanceof ColumnLayoutComponent<?> column)for(Object child:column.getChildComponents())if(child instanceof RowLayoutComponent<?> row)for(Object action:row.getChildComponents())if(action instanceof GuideActionRenderer<?> guide&&guide.isVisible())result.add(guide);
+  return result;
+ }
+ private static void hideDuplicateDrop(Pair pair)throws IllegalAccessException{
+  String drop=class_2561.method_43471("controlify.guide.container.drop").getString();
+  boolean onLeft=false;
+  for(var guide:visibleActions(pair.normalLeft))if(((class_2561)NAME.get(guide)).getString().equals(drop))onLeft=true;
+  if(onLeft)for(var guide:visibleActions(pair.normalRight))if(((class_2561)NAME.get(guide)).getString().equals(drop))NAME.set(guide,null);
+ }
+ private static int primaryHeight(Pair pair){
+  int height=0;
+  for(var guide:visibleActions(pair.normalLeft))height=Math.max(height,guide.size().y());
+  var column=(ColumnLayoutComponent<?>)pair.normalRight.getComponent();
+  if(!column.getChildComponents().isEmpty())height=Math.max(height,column.getChildComponents().get(0).size().y());
+  return height+4;
+ }
+ private static void placeRight(PositionedComponent<?> right,int width,int bottom,int primaryHeight){
+  // Keep the primary row level with the left hints; extra actions extend below it.
+  right.updatePosition(width,bottom+Math.max(0,right.getComponent().size().y()-primaryHeight));
  }
  /** Side guides may share the inventory's vertical space without covering its slots. */
  public static boolean overlapsContainer(Bounds guide,int left,int top,int width,int height){
@@ -57,8 +86,9 @@ public final class KnowlesCraftLayout implements EmiPlugin {
    int toolbar=screen.field_22790;
    for(class_339 widget:new class_339[]{EmiScreenManager.search,EmiScreenManager.emi,EmiScreenManager.tree})if(widget!=null&&widget.field_22764&&widget.method_46427()>screen.field_22790/2)toolbar=Math.min(toolbar,widget.method_46427());
    active&=toolbar<screen.field_22790;
-   int bottom=toolbar-4;
-   pair.normalLeft.updatePosition(screen.field_22789,bottom);pair.normalRight.updatePosition(screen.field_22789,bottom);
+   if(active)hideDuplicateDrop(pair);
+   int bottom=toolbar-4,primary=primaryHeight(pair);
+   pair.normalLeft.updatePosition(screen.field_22789,bottom);placeRight(pair.normalRight,screen.field_22789,bottom,primary);
    int x=((AbstractContainerScreenAccessor)container).getLeftPos();
    int top=((AbstractContainerScreenAccessor)container).getTopPos();
    int width=WIDTH.getInt(container);
@@ -69,8 +99,11 @@ public final class KnowlesCraftLayout implements EmiPlugin {
    int li=renderables.indexOf(left),ri=renderables.indexOf(right);
    if(li>=0)renderables.set(li,nextLeft);if(ri>=0)renderables.set(ri,nextRight);
    LEFT.set(processor,nextLeft);RIGHT.set(processor,nextRight);
-   nextLeft.updatePosition(screen.field_22789,active?bottom:screen.field_22790);nextRight.updatePosition(screen.field_22789,active?bottom:screen.field_22790);
-   List<Bounds> bounds=active?List.of(bounds(nextLeft),bounds(nextRight)):List.of();
+   nextLeft.updatePosition(screen.field_22789,active?bottom:screen.field_22790);
+   if(active)placeRight(nextRight,screen.field_22789,bottom,primary);else nextRight.updatePosition(screen.field_22789,screen.field_22790);
+   var bounds=new ArrayList<Bounds>();
+   if(active&&!visibleActions(nextLeft).isEmpty())bounds.add(bounds(nextLeft));
+   if(active&&!visibleActions(nextRight).isEmpty())bounds.add(bounds(nextRight));
    var previous=BOUNDS.put(screen,bounds);
    if(recalculate&&!bounds.equals(previous))EmiScreenManager.recalculate();
    return bounds;
