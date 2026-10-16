@@ -16,7 +16,7 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 
 /** Reserve actual guide bounds in EMI instead of drawing two interfaces together. */
 public final class KnowlesCraftLayout implements EmiPlugin {
- private static final Field LEFT=field(AbstractContainerScreenProcessor.class,"leftLayout"),RIGHT=field(AbstractContainerScreenProcessor.class,"rightLayout"),HEIGHT=field(class_465.class,"field_2779");
+ private static final Field LEFT=field(AbstractContainerScreenProcessor.class,"leftLayout"),RIGHT=field(AbstractContainerScreenProcessor.class,"rightLayout"),WIDTH=field(class_465.class,"field_2792"),HEIGHT=field(class_465.class,"field_2779");
  private static final Map<ScreenProcessor<?>,Pair> PAIRS=new WeakHashMap<>();
  private static final Map<class_437,List<Bounds>> BOUNDS=new WeakHashMap<>();
  private static boolean installed,warned;
@@ -38,12 +38,9 @@ public final class KnowlesCraftLayout implements EmiPlugin {
   var anchor=right?AnchorPoint.BOTTOM_RIGHT:AnchorPoint.BOTTOM_LEFT;
   return new PositionedComponent<>(component,anchor,right?-4:4,0,anchor);
  }
- /** Return a row bottom, or -1 when a tall container needs side columns. */
- public static int rowBottom(int toolbarTop,int guideHeight,int inventoryTop,int inventoryBottom){
-  int bottom=toolbarTop-4;
-  if(bottom-guideHeight>=inventoryBottom+4)return bottom;
-  if(inventoryTop-guideHeight>=8)return inventoryTop-4;
-  return -1;
+ /** Side guides may share the inventory's vertical space without covering its slots. */
+ public static boolean overlapsContainer(Bounds guide,int left,int top,int width,int height){
+  return guide.left()<left+width+4&&guide.right()>left-4&&guide.top()<top+height+4&&guide.bottom()>top-4;
  }
  public static List<Bounds> layout(class_437 screen,boolean recalculate){
   if(!(screen instanceof class_465<?> container))return List.of();
@@ -60,10 +57,12 @@ public final class KnowlesCraftLayout implements EmiPlugin {
    int toolbar=screen.field_22790;
    for(class_339 widget:new class_339[]{EmiScreenManager.search,EmiScreenManager.emi,EmiScreenManager.tree})if(widget!=null&&widget.field_22764&&widget.method_46427()>screen.field_22790/2)toolbar=Math.min(toolbar,widget.method_46427());
    active&=toolbar<screen.field_22790;
-   int height=Math.max(pair.normalLeft.getComponent().size().y(),pair.normalRight.getComponent().size().y());
+   int bottom=toolbar-4;
+   pair.normalLeft.updatePosition(screen.field_22789,bottom);pair.normalRight.updatePosition(screen.field_22789,bottom);
+   int x=((AbstractContainerScreenAccessor)container).getLeftPos();
    int top=((AbstractContainerScreenAccessor)container).getTopPos();
-   int bottom=rowBottom(toolbar,height,top,top+HEIGHT.getInt(container));
-   boolean compact=bottom<0; if(compact)bottom=toolbar-4;
+   int width=WIDTH.getInt(container);
+   boolean compact=overlapsContainer(bounds(pair.normalLeft),x,top,width,HEIGHT.getInt(container))||overlapsContainer(bounds(pair.normalRight),x,top,width,HEIGHT.getInt(container));
    var nextLeft=active?(compact?pair.compactLeft:pair.normalLeft):pair.originalLeft;
    var nextRight=active?(compact?pair.compactRight:pair.normalRight):pair.originalRight;
    var renderables=((ScreenAccessor)screen).getRenderables();
