@@ -11,6 +11,7 @@ import java.util.List;
 public final class KnowlesCraftController implements ControlifyEntrypoint {
  private dev.isxander.controlify.api.bind.InputBindingSupplier mapScreenshot,touchpadSelect;
  private SelectFlow selectFlow=new SelectFlow();
+ private static final java.util.Set<dev.isxander.controlify.controller.ControllerEntity> PAUSE_BLOCKED=java.util.Collections.newSetFromMap(new java.util.WeakHashMap<>());
  private static final java.util.Map<net.minecraft.class_433,PauseGesture> PAUSE_GESTURES=new java.util.WeakHashMap<>();
  private dev.isxander.controlify.controller.ControllerEntity gestureController;
  public void onControlifyInit(ControlifyApi api){
@@ -37,6 +38,7 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
    .category(net.minecraft.class_2561.method_43470("KnowlesCraft"))
    .defaultInput(new dev.isxander.controlify.bindings.input.ButtonInput(dev.isxander.controlify.controller.input.GamepadInputs.TOUCHPAD_1_BUTTON))
    .allowedContexts(dev.isxander.controlify.bindings.BindContext.IN_GAME));
+  ControlifyEvents.CONTROLLER_STATE_UPDATE.register(event->filterPauseInput(event.controller()));
   ControlifyEvents.ACTIVE_CONTROLLER_TICKED.register(event->{
    var controller=event.controller();var mc=net.minecraft.class_310.method_1551();
    handlePauseScreen(mc,pauseButtonDown(controller));
@@ -51,7 +53,7 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
    if(action==4){var mouse=Controlify.instance().virtualMouseHandler();if(!mouse.isVirtualMouseEnabled())mouse.enableVirtualMouse();}
 
   });
-  ControlifyEvents.CONTROLLER_DISCONNECTED.register(event->{selectFlow=new SelectFlow();gestureController=null;PAUSE_GESTURES.clear();});
+  ControlifyEvents.CONTROLLER_DISCONNECTED.register(event->{selectFlow=new SelectFlow();gestureController=null;PAUSE_GESTURES.clear();PAUSE_BLOCKED.clear();});
   // Some ported mods register outside Fabric's key registry. Correlate those too.
   for(var key:net.minecraft.class_310.method_1551().field_1690.field_1839){
    String name=key.method_1431();
@@ -142,15 +144,22 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
   }
  }
 
- /** Close on a fresh completed tap, after the opening press has been released. */
+ /** Ignore the opening press; close on the next press and consume it through release. */
  public static final class PauseGesture{
-  private boolean waitRelease,down;
+  private boolean waitRelease;
   public PauseGesture(boolean openingPress){waitRelease=openingPress;}
   public boolean update(boolean pressed){
    if(waitRelease){if(!pressed)waitRelease=false;return false;}
-   if(pressed){down=true;return false;}
-   boolean close=down;down=false;return close;
+   if(!pressed)return false;
+   waitRelease=true;return true;
   }
+ }
+ /** Runs after input sampling, before Controlify's in-game pause action. */
+ public static void filterPauseInput(dev.isxander.controlify.controller.ControllerEntity controller){
+  if(!PAUSE_BLOCKED.contains(controller))return;
+  boolean pressed=pauseButtonDown(controller);
+  dev.isxander.controlify.bindings.ControlifyBindings.PAUSE.on(controller).pushState(dev.isxander.controlify.controller.input.ControllerState.EMPTY);
+  if(!pressed)PAUSE_BLOCKED.remove(controller);
  }
  public static boolean pauseButtonDown(dev.isxander.controlify.controller.ControllerEntity controller){
   var input=controller.input().orElseThrow();
@@ -161,6 +170,7 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
   if(!(mc.field_1755 instanceof net.minecraft.class_433 pause))return false;
   var gesture=PAUSE_GESTURES.computeIfAbsent(pause,key->new PauseGesture(pressed));
   if(!gesture.update(pressed))return false;
+  Controlify.instance().getCurrentController().ifPresent(PAUSE_BLOCKED::add);
   PAUSE_GESTURES.remove(pause);pause.method_25419();return true;
  }
  /** Options' generic close resumes play; its Done button retains the parent. */
