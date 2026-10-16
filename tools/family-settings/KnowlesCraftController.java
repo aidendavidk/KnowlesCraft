@@ -18,6 +18,8 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
   dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(net.minecraft.class_447.class,ParentBackProcessor::new);
   dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(net.minecraft.class_457.class,ParentBackProcessor::new);
   dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(net.minecraft.class_407.class,CancelBackProcessor::new);
+  dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(journeymap.client.ui.fullscreen.Fullscreen.class,
+   screen->new MapBackProcessor(screen,()->{selectGesture.reset();journeymap.client.ui.UIManager.INSTANCE.closeCurrent();}));
   var bindApi=dev.isxander.controlify.api.bind.ControlifyBindApi.get();
   mapScreenshot=bindApi.registerBinding(builder->builder.id("knowlescraft","map_screenshot")
    .name(net.minecraft.class_2561.method_43470("Map / Hold for Screenshot"))
@@ -73,6 +75,21 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
      .map(id->input.getBinding(id)!=null?id:new class_2960("controlify:change_perspective")).toArray(class_2960[]::new);
  }
  public void onControllersDiscovered(ControlifyApi api){}
+ /** Select closes the map before Controlify can treat it as a cursor toggle. */
+ public static final class MapBackProcessor extends dev.isxander.controlify.screenop.ScreenProcessor<net.minecraft.class_437>{
+  private final Runnable closeMap;
+  public MapBackProcessor(net.minecraft.class_437 screen,Runnable closeMap){super(screen);this.closeMap=closeMap;}
+  public dev.isxander.controlify.virtualmouse.VirtualMouseBehaviour virtualMouseBehaviour(){return dev.isxander.controlify.virtualmouse.VirtualMouseBehaviour.ENABLED;}
+  public boolean selectPressed(dev.isxander.controlify.controller.input.ControllerStateView state){
+   if(!state.isButtonDown(dev.isxander.controlify.controller.input.GamepadInputs.BACK_BUTTON)&&!state.isButtonDown(dev.isxander.controlify.controller.input.GamepadInputs.TOUCHPAD_1_BUTTON))return false;
+   closeMap.run();return true;
+  }
+  public void onControllerUpdate(dev.isxander.controlify.controller.ControllerEntity controller){
+   if(controller.input().isPresent()&&selectPressed(controller.input().get().stateNow()))return;
+   var mouse=Controlify.instance().virtualMouseHandler();if(!mouse.isVirtualMouseEnabled())mouse.enableVirtualMouse();
+   super.onControllerUpdate(controller);
+  }
+ }
  public static void configureSelectDefaults(dev.isxander.controlify.controller.input.InputComponent input){
   var back=new dev.isxander.controlify.bindings.input.ButtonInput(new class_2960("controlify:button/back"));
   for(String id:List.of("controlify:change_perspective","controlify:take_screenshot")){

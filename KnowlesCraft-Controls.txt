@@ -10,7 +10,8 @@ A: jump. B: close menus. X: swap hands. Y: inventory.
 RT: mine/attack. LT: use/place. LB/RB: hotbar. Menu: pause.
 D-pad up: chat. Down: drop. Left: pick block. Right: radial menu.
 Select/View/Touchpad: tap for map; hold 0.5 seconds for one screenshot.
-Holding does not open the map. In menus, Select still toggles the virtual mouse.
+Holding does not open the map. In the fullscreen map, Select closes the map;
+virtual mouse stays enabled. Other menus retain their cursor toggle.
 Perspective remains available in the radial menu.
 B / Circle goes back one menu level, including Options back to Pause.
 
