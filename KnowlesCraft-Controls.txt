@@ -9,7 +9,9 @@ Left stick: move; click to sprint. Right stick: look; click to sneak.
 A: jump. B: close menus. X: swap hands. Y: inventory.
 RT: mine/attack. LT: use/place. LB/RB: hotbar. Menu: pause.
 D-pad up: chat. Down: drop. Left: pick block. Right: radial menu.
-View/Back: perspective; in menus it toggles the virtual mouse.
+Select/View/Touchpad: tap for map; hold 0.75 seconds for one screenshot.
+Holding does not open the map. In menus, Select still toggles the virtual mouse.
+Perspective remains available in the radial menu.
 B / Circle goes back one menu level, including Options back to Pause.
 
 Hold D-pad right, select with the right stick, then release for:

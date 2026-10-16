@@ -106,7 +106,7 @@ metafile = true
 
 [[files]]
 file = "mods/family-settings.pw.toml"
-hash = "6a845e98bb4f988cb12f97dabf161cdc7f8a684a4d20f3d0c63eb9507d8c4270"
+hash = "8a30a87c559f98b41b82b3db541e2b66708cd56de4274edeb699761d89c3c26f"
 metafile = true
 
 [[files]]
@@ -401,7 +401,7 @@ metafile = true
 
 [[files]]
 file = "KnowlesCraft-Controls.txt"
-hash = "9b8672275aade4060bd93f72228fb36f1a360ecf91f2a3e61a07d9db193be187"
+hash = "cab316a75a66e8c53b5f48d7753adb0eafbf68972c61e068db99b3bcc4e45ef2"
 
 [[files]]
 file = "mods/controlify.pw.toml"

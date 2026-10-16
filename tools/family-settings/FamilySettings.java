@@ -36,6 +36,7 @@ public final class FamilySettings implements PreLaunchEntrypoint {
             }
         }
         migrateControllerGuides(game);
+        migrateSelectButton(game);
         if(!deck)return;
         Path marker=game.resolve("config/knowlescraft/deck-preset-v1.applied");if(Files.exists(marker))return;
         boolean oled=Files.readString(dmi.resolve("product_name")).strip().equalsIgnoreCase("Galileo");
@@ -83,6 +84,35 @@ public final class FamilySettings implements PreLaunchEntrypoint {
             atomicWrite(config,new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(root));
         }
         Files.writeString(marker,"Gameplay corner hints hidden. Menu guides and personal controls preserved.\n");
+    }
+    static void migrateSelectButton(Path game)throws IOException{
+        Path marker=game.resolve("config/knowlescraft/select-map-hold-screenshot-v1.applied");
+        if(Files.exists(marker))return;
+        Path config=game.resolve("config/controlify.json");String before=Files.readString(config);
+        var root=com.google.gson.JsonParser.parseString(before).getAsJsonObject();boolean changed=false;
+        if(root.has("controllers")&&root.get("controllers").isJsonObject())for(var entry:root.getAsJsonObject("controllers").entrySet()){
+            if(!entry.getValue().isJsonObject())continue;
+            var profile=entry.getValue().getAsJsonObject();
+            if(!profile.has("config")||!profile.get("config").isJsonObject())continue;
+            var configs=profile.getAsJsonObject("config");
+            if(!configs.has("controlify:input")||!configs.get("controlify:input").isJsonObject())continue;
+            var input=configs.getAsJsonObject("controlify:input");
+            var bindings=input.has("bindings")?input.getAsJsonObject("bindings"):new com.google.gson.JsonObject();
+            for(String id:List.of("controlify:change_perspective","controlify:take_screenshot")){
+                var old=bindings.get(id);
+                boolean defaultPerspective=old==null&&id.equals("controlify:change_perspective");
+                boolean boundToSelect=old!=null&&old.isJsonObject()&&old.getAsJsonObject().size()==1&&old.getAsJsonObject().has("button")&&old.getAsJsonObject().get("button").getAsString().equals("controlify:button/back");
+                if(defaultPerspective||boundToSelect){bindings.add(id,new com.google.gson.JsonObject());changed=true;}
+            }
+            input.add("bindings",bindings);
+        }
+        Files.createDirectories(marker.getParent());
+        if(changed){
+            Path backup=marker.getParent().resolve("controlify.before-select-map.json");
+            if(!Files.exists(backup))Files.writeString(backup,before,StandardOpenOption.CREATE_NEW);
+            atomicWrite(config,new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(root));
+        }
+        Files.writeString(marker,"Select: tap map, hold screenshot. Later personal bindings preserved.\n");
     }
     static String option(String text,String key,String value){
         java.util.regex.Pattern p=java.util.regex.Pattern.compile("(?m)^"+java.util.regex.Pattern.quote(key)+":[^\\r\\n]*");

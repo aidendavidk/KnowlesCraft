@@ -9,6 +9,9 @@ import java.util.List;
 
 /** Set up new profiles only; Controlify owns camera response and calibration. */
 public final class KnowlesCraftController implements ControlifyEntrypoint {
+ private dev.isxander.controlify.api.bind.InputBindingSupplier mapScreenshot;
+ private SelectGesture selectGesture=new SelectGesture();
+ private dev.isxander.controlify.controller.ControllerEntity gestureController;
  public void onControlifyInit(ControlifyApi api){
   dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(net.minecraft.class_429.class,OptionsBackProcessor::new);
   dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(net.minecraft.class_5522.class,ParentBackProcessor::new);
@@ -16,6 +19,20 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
   dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(net.minecraft.class_457.class,ParentBackProcessor::new);
   dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(net.minecraft.class_407.class,CancelBackProcessor::new);
   var bindApi=dev.isxander.controlify.api.bind.ControlifyBindApi.get();
+  mapScreenshot=bindApi.registerBinding(builder->builder.id("knowlescraft","map_screenshot")
+   .name(net.minecraft.class_2561.method_43470("Map / Hold for Screenshot"))
+   .description(net.minecraft.class_2561.method_43470("Tap to open the map. Hold 0.75 seconds for one screenshot."))
+   .category(net.minecraft.class_2561.method_43470("KnowlesCraft"))
+   .defaultInput(new dev.isxander.controlify.bindings.input.ButtonInput(new class_2960("controlify:button/back")))
+   .allowedContexts(dev.isxander.controlify.bindings.BindContext.IN_GAME));
+  ControlifyEvents.ACTIVE_CONTROLLER_TICKED.register(event->{
+   var controller=event.controller();var mc=net.minecraft.class_310.method_1551();
+   if(gestureController!=controller){selectGesture=new SelectGesture();gestureController=controller;}
+   int action=selectGesture.update(mapScreenshot.on(controller).digitalNow(),mc.field_1755==null&&mc.field_1724!=null,System.nanoTime());
+   if(action==1){var binding=controller.input().orElseThrow().getBinding(new class_2960("fabric-key-binding-api-v1:key.journeymap.map_toggle_alt"));if(binding!=null)binding.fakePress();}
+   if(action==2)dev.isxander.controlify.bindings.ControlifyBindings.TAKE_SCREENSHOT.on(controller).fakePress();
+  });
+  ControlifyEvents.CONTROLLER_DISCONNECTED.register(event->{selectGesture.reset();gestureController=null;});
   // Some ported mods register outside Fabric's key registry. Correlate those too.
   for(var key:net.minecraft.class_310.method_1551().field_1690.field_1839){
    String name=key.method_1431();
@@ -31,6 +48,7 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
    if(!event.newController())return;
    event.controller().input().ifPresent(input->{
     event.controller().genericConfig().config().showIngameGuide=false;
+    configureSelectDefaults(input);
     configureNewProfile(input,true);
     Controlify.instance().config().setDirty();
    });
@@ -50,6 +68,30 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
      .map(id->input.getBinding(id)!=null?id:new class_2960("controlify:change_perspective")).toArray(class_2960[]::new);
  }
  public void onControllersDiscovered(ControlifyApi api){}
+ public static void configureSelectDefaults(dev.isxander.controlify.controller.input.InputComponent input){
+  var back=new dev.isxander.controlify.bindings.input.ButtonInput(new class_2960("controlify:button/back"));
+  for(String id:List.of("controlify:change_perspective","controlify:take_screenshot")){
+   var binding=input.getBinding(new class_2960(id));
+   if(binding!=null&&binding.boundInput().equals(back))binding.setBoundInput(dev.isxander.controlify.bindings.input.EmptyInput.INSTANCE);
+  }
+ }
+ /** Decide tap versus hold once, without emitting a tap on press or after a hold. */
+ public static final class SelectGesture{
+  private boolean down,held,blocked;private long started;
+  public void reset(){down=false;held=false;blocked=true;}
+  public int update(boolean pressed,boolean allowed,long now){
+   if(!allowed){reset();return 0;}
+   if(blocked){if(!pressed)blocked=false;return 0;}
+   if(pressed){
+    if(!down){down=true;held=false;started=now;}
+    if(!held&&now-started>=750_000_000L){held=true;return 2;}
+    return 0;
+   }
+   if(!down)return 0;
+   down=false;boolean screenshot=held||now-started>=750_000_000L;boolean already=held;held=false;
+   return already?0:screenshot?2:1;
+  }
+ }
 
  /** Options' generic close resumes play; its Done button retains the parent. */
  public static final class OptionsBackProcessor extends dev.isxander.controlify.screenop.ScreenProcessor<net.minecraft.class_429>{
