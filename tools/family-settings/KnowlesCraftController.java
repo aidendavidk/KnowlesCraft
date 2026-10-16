@@ -19,7 +19,7 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
   dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(net.minecraft.class_457.class,ParentBackProcessor::new);
   dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(net.minecraft.class_407.class,CancelBackProcessor::new);
   dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(journeymap.client.ui.fullscreen.Fullscreen.class,
-   screen->new MapBackProcessor(screen,()->{selectGesture.reset();journeymap.client.ui.UIManager.INSTANCE.closeCurrent();}));
+   screen->new MapBackProcessor(screen,()->{selectGesture.reset();journeymap.client.ui.UIManager.INSTANCE.closeAll();}));
   var bindApi=dev.isxander.controlify.api.bind.ControlifyBindApi.get();
   mapScreenshot=bindApi.registerBinding(builder->builder.id("knowlescraft","map_screenshot")
    .name(net.minecraft.class_2561.method_43470("Map / Hold for Screenshot"))
@@ -35,6 +35,13 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
   ControlifyEvents.ACTIVE_CONTROLLER_TICKED.register(event->{
    var controller=event.controller();var mc=net.minecraft.class_310.method_1551();
    if(gestureController!=controller){selectGesture=new SelectGesture();gestureController=controller;}
+   if(mc.field_1755 instanceof journeymap.client.ui.fullscreen.Fullscreen){
+    selectGesture.reset();
+    handleMapSelect(controller.input().orElseThrow().rawStateNow(),
+     ()->journeymap.client.ui.UIManager.INSTANCE.closeAll(),
+     ()->{var mouse=Controlify.instance().virtualMouseHandler();if(!mouse.isVirtualMouseEnabled())mouse.enableVirtualMouse();});
+    return;
+   }
    int action=selectGesture.update(mapScreenshot.on(controller).digitalNow()||touchpadSelect.on(controller).digitalNow(),mc.field_1755==null&&mc.field_1724!=null,System.nanoTime());
    if(action==1)journeymap.client.ui.UIManager.INSTANCE.openFullscreenMap();
    if(action==2)dev.isxander.controlify.bindings.ControlifyBindings.TAKE_SCREENSHOT.on(controller).fakePress();
@@ -75,6 +82,10 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
      .map(id->input.getBinding(id)!=null?id:new class_2960("controlify:change_perspective")).toArray(class_2960[]::new);
  }
  public void onControllersDiscovered(ControlifyApi api){}
+ public static boolean handleMapSelect(dev.isxander.controlify.controller.input.ControllerStateView state,Runnable closeMap,Runnable keepCursor){
+  if(state.isButtonDown(dev.isxander.controlify.controller.input.GamepadInputs.BACK_BUTTON)||state.isButtonDown(dev.isxander.controlify.controller.input.GamepadInputs.TOUCHPAD_1_BUTTON)){closeMap.run();return true;}
+  keepCursor.run();return false;
+ }
  /** Select closes the map before Controlify can treat it as a cursor toggle. */
  public static final class MapBackProcessor extends dev.isxander.controlify.screenop.ScreenProcessor<net.minecraft.class_437>{
   private final Runnable closeMap;
