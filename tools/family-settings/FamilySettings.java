@@ -28,6 +28,9 @@ public final class FamilySettings implements PreLaunchEntrypoint {
         }catch(IOException|SecurityException e){return false;}
     }
     static void applyClientDefaults(Path game,String os,Path dmi)throws Exception{
+        applyBackpackIntegration(game);
+        Path initialOptions=game.resolve("options.txt");
+        if(!Files.exists(initialOptions))Files.writeString(initialOptions,"version:3465\nenableVsync:true\n",StandardOpenOption.CREATE_NEW);
         boolean deck=isSteamDeck(os,dmi);Path config=game.resolve("config/controlify.json");
         if(!Files.exists(config)){
             try(InputStream in=FamilySettings.class.getResourceAsStream("/knowlescraft/controller-defaults.json")){
@@ -44,7 +47,7 @@ public final class FamilySettings implements PreLaunchEntrypoint {
         Path options=game.resolve("options.txt");String before=Files.exists(options)?Files.readString(options):"version:3465\n";
         Path saved=marker.getParent().resolve("options.before-deck-preset.txt");if(!Files.exists(saved))Files.writeString(saved,before);
         Map<String,String> preset=new LinkedHashMap<>();
-        preset.put("maxFps",oled?"90":"60");preset.put("enableVsync","false");preset.put("renderDistance","12");preset.put("simulationDistance","6");
+        preset.put("maxFps",oled?"90":"60");preset.put("renderDistance","12");preset.put("simulationDistance","6");
         preset.put("graphicsMode","0");preset.put("renderClouds","false");preset.put("particles","1");preset.put("entityDistanceScaling","1.0");preset.put("guiScale","2");preset.put("autoJump","false");
         String after=before;
         for(var entry:preset.entrySet())after=option(after,entry.getKey(),entry.getValue());
@@ -56,8 +59,24 @@ public final class FamilySettings implements PreLaunchEntrypoint {
         Path irisSaved=marker.getParent().resolve("iris.before-deck-preset.properties");if(!Files.exists(irisSaved))Files.writeString(irisSaved,irisBefore);
         String irisAfter=irisBefore.replaceAll("(?m)^enableShaders=[^\\r\\n]*","enableShaders=false");
         if(!irisAfter.contains("enableShaders="))irisAfter+="\nenableShaders=false\n";atomicWrite(iris,irisAfter);
-        Files.writeString(marker,(oled?"Steam Deck OLED Â· 90 FPS cap":"Steam Deck LCD Â· 60 FPS cap")+"\nDefaults applied once; later changes are yours.\n");
+        Files.writeString(marker,(oled?"Steam Deck OLED Ã‚Â· 90 FPS cap":"Steam Deck LCD Ã‚Â· 60 FPS cap")+"\nDefaults applied once; later changes are yours.\n");
         System.out.println("[KnowlesCraft] Applied "+(oled?"OLED 90":"LCD 60")+" FPS Deck preset. Future launches preserve your changes.");
+    }
+    static void applyBackpackIntegration(Path game)throws IOException{
+        Path marker=game.resolve("config/knowlescraft/backpack-trinkets-v1.applied");
+        if(Files.exists(marker))return;
+        Path config=game.resolve("config/travelersbackpack.json5");
+        String before=Files.exists(config)?Files.readString(config):"";
+        String after;
+        if(before.isBlank())after="{\n  \"backpackSettings\": {\n    \"trinketsIntegration\": true\n  }\n}\n";
+        else {
+            after=before.replaceAll("(\"trinketsIntegration\"\\s*:\\s*)false","$1true");
+            if(!after.contains("trinketsIntegration"))throw new IOException("Backpack integration setting missing");
+        }
+        Files.createDirectories(marker.getParent());
+        if(!before.isBlank()&&!Files.exists(marker.getParent().resolve("travelersbackpack.before-trinkets.json5")))Files.writeString(marker.getParent().resolve("travelersbackpack.before-trinkets.json5"),before);
+        atomicWrite(config,after);
+        Files.writeString(marker,"Traveler's Backpack uses the existing Trinkets back slot.\n");
     }
     static void migrateControllerGuides(Path game)throws IOException{
         Path marker=game.resolve("config/knowlescraft/clean-controller-hud-v1.applied");
