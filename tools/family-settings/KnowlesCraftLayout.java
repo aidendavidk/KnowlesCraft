@@ -115,7 +115,13 @@ public final class KnowlesCraftLayout implements EmiPlugin {
  public static boolean overlapsContainer(Bounds guide,int left,int top,int width,int height){
   return guide.left()<left+width+4&&guide.right()>left-4&&guide.top()<top+height+4&&guide.bottom()>top-4;
  }
+ private static void hideBottomButtons(){
+  for(class_339 button:new class_339[]{EmiScreenManager.emi,EmiScreenManager.tree})if(button!=null){
+   button.field_22764=false;button.field_22763=false;
+  }
+ }
  public static List<Bounds> layout(class_437 screen,boolean recalculate){
+  hideBottomButtons();
   if(!(screen instanceof class_465<?> container))return List.of();
   try{
    var processor=containerProcessor(screen);
@@ -137,7 +143,7 @@ public final class KnowlesCraftLayout implements EmiPlugin {
 
    if(active)hideDuplicateDrop(pair);
    int bottom=toolbar-4,primary=primaryHeight(pair);
-   pair.normalLeft.updatePosition(screen.field_22789,bottom);placeRight(pair.normalRight,screen.field_22789,bottom,primary);
+   pair.normalLeft.updatePosition(screen.field_22789,bottom+primary-2);placeRight(pair.normalRight,screen.field_22789,bottom,primary);
    int x=((AbstractContainerScreenAccessor)container).getLeftPos();
    int top=((AbstractContainerScreenAccessor)container).getTopPos();
    int width=WIDTH.getInt(container);
@@ -148,7 +154,7 @@ public final class KnowlesCraftLayout implements EmiPlugin {
    // Draw once through the Fabric overlay, including recipe-book render paths.
    for(var guide:List.of(left,right,pair.originalLeft,pair.originalRight,pair.normalLeft,pair.normalRight,pair.compactLeft,pair.compactRight))renderables.removeIf(r->r==guide);
    LEFT.set(processor,nextLeft);RIGHT.set(processor,nextRight);
-   nextLeft.updatePosition(screen.field_22789,active?bottom:screen.field_22790);
+   nextLeft.updatePosition(screen.field_22789,active?bottom+primary-2:screen.field_22790);
    if(active)placeRight(nextRight,screen.field_22789,bottom,primary);else nextRight.updatePosition(screen.field_22789,screen.field_22790);
    var bounds=new ArrayList<Bounds>();
    if(active&&!visibleActions(nextLeft).isEmpty())bounds.add(bounds(nextLeft));
