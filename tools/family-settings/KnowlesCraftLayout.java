@@ -79,8 +79,11 @@ public final class KnowlesCraftLayout implements EmiPlugin {
   }
   if(compact&&component instanceof ColumnLayoutComponent column){
    var builder=ColumnLayoutComponent.<RowLayoutComponent<RenderComponent>>builder().spacing(2).colPadding(2).elementPosition(right?ColumnLayoutComponent.ElementPosition.RIGHT:ColumnLayoutComponent.ElementPosition.LEFT);
-   var rows=new ArrayList<>(column.getChildComponents());if(right)Collections.reverse(rows);
-   for(Object child:rows)if(child instanceof RowLayoutComponent row)for(Object action:row.getChildComponents())builder.element(RowLayoutComponent.<RenderComponent>builder().rowPadding(0).elementPosition(RowLayoutComponent.ElementPosition.MIDDLE).element((RenderComponent)action).build());
+   var rows=new ArrayList<>(column.getChildComponents());
+   for(Object child:rows)if(child instanceof RowLayoutComponent row){
+    var actions=new ArrayList<>(row.getChildComponents());if(right)Collections.reverse(actions);
+    for(Object action:actions)builder.element(RowLayoutComponent.<RenderComponent>builder().rowPadding(0).elementPosition(RowLayoutComponent.ElementPosition.MIDDLE).element((RenderComponent)action).build());
+   }
    component=builder.build();
   }
   var anchor=right?AnchorPoint.BOTTOM_RIGHT:AnchorPoint.BOTTOM_LEFT;
@@ -105,8 +108,8 @@ public final class KnowlesCraftLayout implements EmiPlugin {
   return height+4;
  }
  private static void placeRight(PositionedComponent<?> right,int width,int bottom,int primaryHeight){
-  // Keep the primary row level with the left hints; extra actions extend below it.
-  right.updatePosition(width,bottom+Math.max(0,right.getComponent().size().y()-primaryHeight));
+  // Quick Move stays on the lower row; hidden actions free the space above it.
+  right.updatePosition(width,bottom+primaryHeight-2);
  }
  /** Side guides may share the inventory's vertical space without covering its slots. */
  public static boolean overlapsContainer(Bounds guide,int left,int top,int width,int height){
@@ -126,7 +129,7 @@ public final class KnowlesCraftLayout implements EmiPlugin {
    if(guidesEnabled())updateRecipeGuides(screen,processor,left,right);
    var pair=PAIRS.get(processor);
    if(pair==null||left!=pair.originalLeft&&left!=pair.normalLeft&&left!=pair.compactLeft){
-    pair=new Pair(left,right,position(left,false,true),position(right,true,false),position(left,false,true),position(right,true,true));PAIRS.put(processor,pair);
+    pair=new Pair(left,right,position(left,false,true),position(right,true,true),position(left,false,true),position(right,true,true));PAIRS.put(processor,pair);
    }
    boolean active=guidesEnabled();
    int toolbar=screen.field_22790;
