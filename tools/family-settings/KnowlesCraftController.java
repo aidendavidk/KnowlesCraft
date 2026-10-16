@@ -41,6 +41,7 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
   ControlifyEvents.CONTROLLER_STATE_UPDATE.register(event->filterPauseInput(event.controller()));
   ControlifyEvents.ACTIVE_CONTROLLER_TICKED.register(event->{
    var controller=event.controller();var mc=net.minecraft.class_310.method_1551();
+   KnowlesCraftLayout.handleRecipeDrop(mc.field_1755,controller);
    handlePauseScreen(mc,pauseButtonDown(controller));
    if(gestureController!=controller){selectFlow=new SelectFlow();gestureController=controller;}
    var state=controller.input().orElseThrow().rawStateNow();

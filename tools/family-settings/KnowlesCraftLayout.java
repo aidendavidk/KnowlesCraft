@@ -57,12 +57,25 @@ public final class KnowlesCraftLayout implements EmiPlugin {
   for(var position:List.of(left,right))if(position.getComponent() instanceof ColumnLayoutComponent<?> column)
    for(var child:column.getChildComponents())if(child instanceof RowLayoutComponent<?> row)
     for(var action:row.getChildComponents())if(action instanceof GuideActionRenderer<?> guide)((GuideActionRenderer<dev.isxander.controlify.gui.guide.ContainerGuideCtx>)guide).updateName(ctx);
-  // Controlify's select hint skips empty slots, although they accept placement.
-  if(!held.method_7960()&&slot!=null&&!slot.method_7681()&&slot.method_7680(held)){
+  // Slot acceptance alone does not mean two existing stacks can merge.
+  if(!held.method_7960()&&slot!=null&&slot.method_7680(held)){
    var column=(ColumnLayoutComponent<?>)left.getComponent();
    var row=(RowLayoutComponent<?>)column.getChildComponents().get(0);
-   NAME.set(row.getChildComponents().get(0),class_2561.method_43471(held.method_7947()>1?"controlify.guide.container.place_all":"controlify.guide.container.place_one"));
+   boolean swap=slot.method_7681()&&!class_1799.method_31577(held,slot.method_7677());
+   NAME.set(row.getChildComponents().get(0),class_2561.method_43471(swap?"controlify.guide.container.swap":held.method_7947()>1?"controlify.guide.container.place_all":"controlify.guide.container.place_one"));
   }
+ }
+ /** Recipe-book processors omit the container's held-stack drop action. */
+ public static boolean handleRecipeDrop(class_437 screen,dev.isxander.controlify.controller.ControllerEntity controller){
+  if(!(screen instanceof class_465<?> container)||container.method_17577().method_34255().method_7960()||!Controlify.instance().currentInputMode().isController())return false;
+  try{
+   var processor=containerProcessor(screen);
+   if(processor==null||ScreenProcessorProvider.provide(screen)==processor)return false;
+   if(!dev.isxander.controlify.bindings.ControlifyBindings.DROP_INVENTORY.on(controller).justPressed())return false;
+   var click=(AbstractContainerScreenProcessor.ClickSlotFunction)field(AbstractContainerScreenProcessor.class,"clickSlotFunction").get(processor);
+   click.clickSlot(null,-999,0,class_1713.field_7790);
+   return true;
+  }catch(Exception e){if(!warned){warned=true;System.err.println("[KnowlesCraft] Inventory drop unavailable: "+e);}return false;}
  }
  private static boolean guidesEnabled(){
   var api=Controlify.instance();
