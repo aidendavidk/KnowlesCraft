@@ -45,15 +45,24 @@ public final class KnowlesCraftLayout implements EmiPlugin {
  }
  @SuppressWarnings("unchecked")
  private static void updateRecipeGuides(class_437 screen,AbstractContainerScreenProcessor<?> processor,PositionedComponent<?> left,PositionedComponent<?> right)throws Exception{
-  if(ScreenProcessorProvider.provide(screen)==processor)return;
   var slotField=field(AbstractContainerScreenProcessor.class,"hoveredSlot");
   var slot=((java.util.function.Supplier<class_1735>)slotField.get(processor)).get();
   var container=(class_465<?>)screen;var accessor=(AbstractContainerScreenAccessor)screen;
   var mouse=Controlify.instance().virtualMouseHandler();
-  var ctx=new dev.isxander.controlify.gui.guide.ContainerGuideCtx(slot,container.method_17577().method_34255(),accessor.invokeHasClickedOutside(mouse.getCurrentX(1),mouse.getCurrentY(1),accessor.getLeftPos(),accessor.getTopPos(),0));
+  var window=class_310.method_1551().method_22683();
+  double x=mouse.getCurrentX(1)*(double)screen.field_22789/window.method_4480();
+  double y=mouse.getCurrentY(1)*(double)screen.field_22790/window.method_4507();
+  var held=container.method_17577().method_34255();
+  var ctx=new dev.isxander.controlify.gui.guide.ContainerGuideCtx(slot,held,slot==null&&accessor.invokeHasClickedOutside(x,y,accessor.getLeftPos(),accessor.getTopPos(),0));
   for(var position:List.of(left,right))if(position.getComponent() instanceof ColumnLayoutComponent<?> column)
    for(var child:column.getChildComponents())if(child instanceof RowLayoutComponent<?> row)
     for(var action:row.getChildComponents())if(action instanceof GuideActionRenderer<?> guide)((GuideActionRenderer<dev.isxander.controlify.gui.guide.ContainerGuideCtx>)guide).updateName(ctx);
+  // Controlify's select hint skips empty slots, although they accept placement.
+  if(!held.method_7960()&&slot!=null&&!slot.method_7681()&&slot.method_7680(held)){
+   var column=(ColumnLayoutComponent<?>)left.getComponent();
+   var row=(RowLayoutComponent<?>)column.getChildComponents().get(0);
+   NAME.set(row.getChildComponents().get(0),class_2561.method_43471(held.method_7947()>1?"controlify.guide.container.place_all":"controlify.guide.container.place_one"));
+  }
  }
  private static boolean guidesEnabled(){
   var api=Controlify.instance();
