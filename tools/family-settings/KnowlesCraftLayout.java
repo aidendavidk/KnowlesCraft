@@ -138,11 +138,10 @@ public final class KnowlesCraftLayout implements EmiPlugin {
     pair=new Pair(left,right,position(left,false,true),position(right,true,true),position(left,false,true),position(right,true,true));PAIRS.put(processor,pair);
    }
    boolean active=guidesEnabled();
-   int toolbar=screen.field_22790;
-   for(class_339 widget:new class_339[]{EmiScreenManager.search,EmiScreenManager.emi,EmiScreenManager.tree})if(widget!=null&&widget.field_22764&&widget.method_46427()>screen.field_22790/2)toolbar=Math.min(toolbar,widget.method_46427());
-
    if(active)hideDuplicateDrop(pair);
-   int bottom=toolbar-4,primary=primaryHeight(pair);
+   int primary=primaryHeight(pair);
+   // Anchor both columns to the screen edge; search occupies the center only.
+   int bottom=screen.field_22790-primary+6;
    pair.normalLeft.updatePosition(screen.field_22789,bottom+primary-2);placeRight(pair.normalRight,screen.field_22789,bottom,primary);
    int x=((AbstractContainerScreenAccessor)container).getLeftPos();
    int top=((AbstractContainerScreenAccessor)container).getTopPos();
@@ -164,5 +163,5 @@ public final class KnowlesCraftLayout implements EmiPlugin {
    return bounds;
   }catch(Exception e){if(!warned){warned=true;System.err.println("[KnowlesCraft] Inventory guide layout unavailable: "+e);}return List.of();}
  }
- private static Bounds bounds(PositionedComponent<?> position){var size=position.getComponent().size();return new Bounds(position.x()-2,position.y()-2,size.x()+4,size.y()+4);}
+ private static Bounds bounds(PositionedComponent<?> position){var size=position.getComponent().size();return new Bounds(position.x()-2,position.y()-2,size.x()+4,Math.max(0,size.y()-4));}
 }
