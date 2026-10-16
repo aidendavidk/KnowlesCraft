@@ -10,7 +10,7 @@ import java.util.List;
 /** Set up new profiles only; Controlify owns camera response and calibration. */
 public final class KnowlesCraftController implements ControlifyEntrypoint {
  private dev.isxander.controlify.api.bind.InputBindingSupplier mapScreenshot,touchpadSelect;
- private SelectGesture selectGesture=new SelectGesture();
+ private SelectFlow selectFlow=new SelectFlow();
  private dev.isxander.controlify.controller.ControllerEntity gestureController;
  public void onControlifyInit(ControlifyApi api){
   dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(net.minecraft.class_429.class,OptionsBackProcessor::new);
@@ -19,7 +19,7 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
   dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(net.minecraft.class_457.class,ParentBackProcessor::new);
   dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(net.minecraft.class_407.class,CancelBackProcessor::new);
   dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(journeymap.client.ui.fullscreen.Fullscreen.class,
-   screen->new MapBackProcessor(screen,()->{selectGesture.reset();journeymap.client.ui.UIManager.INSTANCE.closeAll();}));
+   MapBackProcessor::new);
   var bindApi=dev.isxander.controlify.api.bind.ControlifyBindApi.get();
   mapScreenshot=bindApi.registerBinding(builder->builder.id("knowlescraft","map_screenshot")
    .name(net.minecraft.class_2561.method_43470("Map / Hold for Screenshot"))
@@ -34,19 +34,18 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
    .allowedContexts(dev.isxander.controlify.bindings.BindContext.IN_GAME));
   ControlifyEvents.ACTIVE_CONTROLLER_TICKED.register(event->{
    var controller=event.controller();var mc=net.minecraft.class_310.method_1551();
-   if(gestureController!=controller){selectGesture=new SelectGesture();gestureController=controller;}
-   if(mc.field_1755 instanceof journeymap.client.ui.fullscreen.Fullscreen){
-    selectGesture.reset();
-    handleMapSelect(controller.input().orElseThrow().rawStateNow(),
-     ()->journeymap.client.ui.UIManager.INSTANCE.closeAll(),
-     ()->{var mouse=Controlify.instance().virtualMouseHandler();if(!mouse.isVirtualMouseEnabled())mouse.enableVirtualMouse();});
-    return;
-   }
-   int action=selectGesture.update(mapScreenshot.on(controller).digitalNow()||touchpadSelect.on(controller).digitalNow(),mc.field_1755==null&&mc.field_1724!=null,System.nanoTime());
+   if(gestureController!=controller){selectFlow=new SelectFlow();gestureController=controller;}
+   var state=controller.input().orElseThrow().rawStateNow();
+   boolean physical=state.isButtonDown(dev.isxander.controlify.controller.input.GamepadInputs.BACK_BUTTON)||state.isButtonDown(dev.isxander.controlify.controller.input.GamepadInputs.TOUCHPAD_1_BUTTON);
+   boolean bound=mapScreenshot.on(controller).digitalNow()||touchpadSelect.on(controller).digitalNow();
+   int action=selectFlow.update(physical,bound,mc.field_1755 instanceof journeymap.client.ui.fullscreen.Fullscreen,mc.field_1755==null&&mc.field_1724!=null,System.nanoTime());
    if(action==1)journeymap.client.ui.UIManager.INSTANCE.openFullscreenMap();
    if(action==2)dev.isxander.controlify.bindings.ControlifyBindings.TAKE_SCREENSHOT.on(controller).fakePress();
+   if(action==3)journeymap.client.ui.UIManager.INSTANCE.closeAll();
+   if(action==4){var mouse=Controlify.instance().virtualMouseHandler();if(!mouse.isVirtualMouseEnabled())mouse.enableVirtualMouse();}
+
   });
-  ControlifyEvents.CONTROLLER_DISCONNECTED.register(event->{selectGesture.reset();gestureController=null;});
+  ControlifyEvents.CONTROLLER_DISCONNECTED.register(event->{selectFlow=new SelectFlow();gestureController=null;});
   // Some ported mods register outside Fabric's key registry. Correlate those too.
   for(var key:net.minecraft.class_310.method_1551().field_1690.field_1839){
    String name=key.method_1431();
@@ -88,15 +87,10 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
  }
  /** Select closes the map before Controlify can treat it as a cursor toggle. */
  public static final class MapBackProcessor extends dev.isxander.controlify.screenop.ScreenProcessor<net.minecraft.class_437>{
-  private final Runnable closeMap;
-  public MapBackProcessor(net.minecraft.class_437 screen,Runnable closeMap){super(screen);this.closeMap=closeMap;}
+  public MapBackProcessor(net.minecraft.class_437 screen){super(screen);}
   public dev.isxander.controlify.virtualmouse.VirtualMouseBehaviour virtualMouseBehaviour(){return dev.isxander.controlify.virtualmouse.VirtualMouseBehaviour.ENABLED;}
-  public boolean selectPressed(dev.isxander.controlify.controller.input.ControllerStateView state){
-   if(!state.isButtonDown(dev.isxander.controlify.controller.input.GamepadInputs.BACK_BUTTON)&&!state.isButtonDown(dev.isxander.controlify.controller.input.GamepadInputs.TOUCHPAD_1_BUTTON))return false;
-   closeMap.run();return true;
-  }
   public void onControllerUpdate(dev.isxander.controlify.controller.ControllerEntity controller){
-   if(controller.input().isPresent()&&selectPressed(controller.input().get().stateNow()))return;
+   if(controller.input().isPresent()){var state=controller.input().get().rawStateNow();if(state.isButtonDown(dev.isxander.controlify.controller.input.GamepadInputs.BACK_BUTTON)||state.isButtonDown(dev.isxander.controlify.controller.input.GamepadInputs.TOUCHPAD_1_BUTTON))return;}
    var mouse=Controlify.instance().virtualMouseHandler();if(!mouse.isVirtualMouseEnabled())mouse.enableVirtualMouse();
    super.onControllerUpdate(controller);
   }
@@ -109,6 +103,22 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
   }
  }
  /** Decide tap versus hold once, without emitting a tap on press or after a hold. */
+ public static final class SelectFlow{
+  private SelectGesture gesture=new SelectGesture();private boolean waitRelease;
+  public int update(boolean physical,boolean bound,boolean inMap,boolean inGame,long now){
+   if(waitRelease){
+    gesture.reset();
+    if(!physical&&!bound){waitRelease=false;gesture=new SelectGesture();}
+    return inMap?4:0;
+   }
+   if(inMap){
+    gesture.reset();
+    if(physical){waitRelease=true;return 3;}
+    return 4;
+   }
+   return gesture.update(bound,inGame,now);
+  }
+ }
  public static final class SelectGesture{
   private boolean down,held,blocked;private long started;
   public void reset(){down=false;held=false;blocked=true;}
