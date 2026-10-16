@@ -11,9 +11,13 @@ import java.util.List;
 public final class KnowlesCraftController implements ControlifyEntrypoint {
  private dev.isxander.controlify.api.bind.InputBindingSupplier mapScreenshot,touchpadSelect;
  private SelectFlow selectFlow=new SelectFlow();
+ private static final java.util.Map<net.minecraft.class_433,PauseGesture> PAUSE_GESTURES=new java.util.WeakHashMap<>();
  private dev.isxander.controlify.controller.ControllerEntity gestureController;
  public void onControlifyInit(ControlifyApi api){
   KnowlesCraftLayout.install();
+  net.fabricmc.fabric.api.client.screen.v1.ScreenEvents.AFTER_INIT.register((mc,screen,width,height)->{
+   if(screen instanceof net.minecraft.class_433 pause)PAUSE_GESTURES.put(pause,new PauseGesture(Controlify.instance().getCurrentController().filter(c->c.input().isPresent()).map(KnowlesCraftController::pauseButtonDown).orElse(false)));
+  });
   dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(net.minecraft.class_429.class,OptionsBackProcessor::new);
   dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(net.minecraft.class_5522.class,ParentBackProcessor::new);
   dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(net.minecraft.class_447.class,ParentBackProcessor::new);
@@ -35,6 +39,7 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
    .allowedContexts(dev.isxander.controlify.bindings.BindContext.IN_GAME));
   ControlifyEvents.ACTIVE_CONTROLLER_TICKED.register(event->{
    var controller=event.controller();var mc=net.minecraft.class_310.method_1551();
+   handlePauseScreen(mc,pauseButtonDown(controller));
    if(gestureController!=controller){selectFlow=new SelectFlow();gestureController=controller;}
    var state=controller.input().orElseThrow().rawStateNow();
    boolean physical=state.isButtonDown(dev.isxander.controlify.controller.input.GamepadInputs.BACK_BUTTON)||state.isButtonDown(dev.isxander.controlify.controller.input.GamepadInputs.TOUCHPAD_1_BUTTON);
@@ -46,7 +51,7 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
    if(action==4){var mouse=Controlify.instance().virtualMouseHandler();if(!mouse.isVirtualMouseEnabled())mouse.enableVirtualMouse();}
 
   });
-  ControlifyEvents.CONTROLLER_DISCONNECTED.register(event->{selectFlow=new SelectFlow();gestureController=null;});
+  ControlifyEvents.CONTROLLER_DISCONNECTED.register(event->{selectFlow=new SelectFlow();gestureController=null;PAUSE_GESTURES.clear();});
   // Some ported mods register outside Fabric's key registry. Correlate those too.
   for(var key:net.minecraft.class_310.method_1551().field_1690.field_1839){
    String name=key.method_1431();
@@ -137,6 +142,27 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
   }
  }
 
+ /** Close on a fresh completed tap, after the opening press has been released. */
+ public static final class PauseGesture{
+  private boolean waitRelease,down;
+  public PauseGesture(boolean openingPress){waitRelease=openingPress;}
+  public boolean update(boolean pressed){
+   if(waitRelease){if(!pressed)waitRelease=false;return false;}
+   if(pressed){down=true;return false;}
+   boolean close=down;down=false;return close;
+  }
+ }
+ public static boolean pauseButtonDown(dev.isxander.controlify.controller.ControllerEntity controller){
+  var input=controller.input().orElseThrow();
+  return dev.isxander.controlify.bindings.ControlifyBindings.PAUSE.on(controller).boundInput().state(input.stateNow())>=input.confObj().buttonActivationThreshold;
+ }
+ /** Pause has a dedicated built-in processor, so handle this after Controlify's tick. */
+ public static boolean handlePauseScreen(net.minecraft.class_310 mc,boolean pressed){
+  if(!(mc.field_1755 instanceof net.minecraft.class_433 pause))return false;
+  var gesture=PAUSE_GESTURES.computeIfAbsent(pause,key->new PauseGesture(pressed));
+  if(!gesture.update(pressed))return false;
+  PAUSE_GESTURES.remove(pause);pause.method_25419();return true;
+ }
  /** Options' generic close resumes play; its Done button retains the parent. */
  public static final class OptionsBackProcessor extends dev.isxander.controlify.screenop.ScreenProcessor<net.minecraft.class_429>{
   public OptionsBackProcessor(net.minecraft.class_429 screen){super(screen);}
