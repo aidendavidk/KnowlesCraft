@@ -78,7 +78,7 @@ public final class KnowlesCraftLayout implements EmiPlugin {
    for(Object row:rows)builder.element((RenderComponent)row);component=builder.build();
   }
   if(compact&&component instanceof ColumnLayoutComponent column){
-   var builder=ColumnLayoutComponent.<RowLayoutComponent<RenderComponent>>builder().spacing(2).colPadding(2).elementPosition(right?ColumnLayoutComponent.ElementPosition.RIGHT:ColumnLayoutComponent.ElementPosition.LEFT);
+   var builder=ColumnLayoutComponent.<RowLayoutComponent<RenderComponent>>builder().spacing(0).colPadding(2).elementPosition(right?ColumnLayoutComponent.ElementPosition.RIGHT:ColumnLayoutComponent.ElementPosition.LEFT);
    var rows=new ArrayList<>(column.getChildComponents());
    for(Object child:rows)if(child instanceof RowLayoutComponent row){
     var actions=new ArrayList<>(row.getChildComponents());if(right)Collections.reverse(actions);
@@ -140,13 +140,16 @@ public final class KnowlesCraftLayout implements EmiPlugin {
    boolean active=guidesEnabled();
    if(active)hideDuplicateDrop(pair);
    int primary=primaryHeight(pair);
-   // Anchor both columns to the screen edge; search occupies the center only.
-   int bottom=screen.field_22790-primary+6;
+   // Keep both hint rows on EMI's existing 18-unit item grid.
+   var itemPanel=EmiScreenManager.getPanelFor(dev.emi.emi.config.SidebarSide.RIGHT);
+   int gridTop=itemPanel!=null&&itemPanel.space!=null?itemPanel.space.ty:20;
+   int gridBottom=gridTop+Math.max(1,(screen.field_22790-2-gridTop)/18)*18;
+   int bottom=gridBottom-primary+5;
    pair.normalLeft.updatePosition(screen.field_22789,bottom+primary-2);placeRight(pair.normalRight,screen.field_22789,bottom,primary);
    int x=((AbstractContainerScreenAccessor)container).getLeftPos();
    int top=((AbstractContainerScreenAccessor)container).getTopPos();
    int width=WIDTH.getInt(container);
-   boolean compact=overlapsContainer(bounds(pair.normalLeft),x,top,width,HEIGHT.getInt(container))||overlapsContainer(bounds(pair.normalRight),x,top,width,HEIGHT.getInt(container));
+   boolean compact=overlapsContainer(bounds(pair.normalLeft,gridTop),x,top,width,HEIGHT.getInt(container))||overlapsContainer(bounds(pair.normalRight,gridTop),x,top,width,HEIGHT.getInt(container));
    var nextLeft=active?(compact?pair.compactLeft:pair.normalLeft):pair.originalLeft;
    var nextRight=active?(compact?pair.compactRight:pair.normalRight):pair.originalRight;
    var renderables=((ScreenAccessor)screen).getRenderables();
@@ -156,12 +159,15 @@ public final class KnowlesCraftLayout implements EmiPlugin {
    nextLeft.updatePosition(screen.field_22789,active?bottom+primary-2:screen.field_22790);
    if(active)placeRight(nextRight,screen.field_22789,bottom,primary);else nextRight.updatePosition(screen.field_22789,screen.field_22790);
    var bounds=new ArrayList<Bounds>();
-   if(active&&!visibleActions(nextLeft).isEmpty())bounds.add(bounds(nextLeft));
-   if(active&&!visibleActions(nextRight).isEmpty())bounds.add(bounds(nextRight));
+   if(active&&!visibleActions(nextLeft).isEmpty())bounds.add(bounds(nextLeft,gridTop));
+   if(active&&!visibleActions(nextRight).isEmpty())bounds.add(bounds(nextRight,gridTop));
    var previous=BOUNDS.put(screen,bounds);
    if(recalculate&&!bounds.equals(previous))EmiScreenManager.recalculate();
    return bounds;
   }catch(Exception e){if(!warned){warned=true;System.err.println("[KnowlesCraft] Inventory guide layout unavailable: "+e);}return List.of();}
  }
- private static Bounds bounds(PositionedComponent<?> position){var size=position.getComponent().size();return new Bounds(position.x()-2,position.y()-2,size.x()+4,Math.max(0,size.y()-4));}
+ private static Bounds bounds(PositionedComponent<?> position,int gridTop){
+  var size=position.getComponent().size();
+  return new Bounds(position.x()-2,position.y()+4,size.x()+4,Math.max(0,size.y()-10));
+ }
 }
