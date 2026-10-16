@@ -11,6 +11,10 @@ import java.util.List;
 public final class KnowlesCraftController implements ControlifyEntrypoint {
  public void onControlifyInit(ControlifyApi api){
   dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(net.minecraft.class_429.class,OptionsBackProcessor::new);
+  dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(net.minecraft.class_5522.class,ParentBackProcessor::new);
+  dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(net.minecraft.class_447.class,ParentBackProcessor::new);
+  dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(net.minecraft.class_457.class,ParentBackProcessor::new);
+  dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(net.minecraft.class_407.class,CancelBackProcessor::new);
   var bindApi=dev.isxander.controlify.api.bind.ControlifyBindApi.get();
   // Some ported mods register outside Fabric's key registry. Correlate those too.
   for(var key:net.minecraft.class_310.method_1551().field_1690.field_1839){
@@ -58,6 +62,29 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
   protected void handleButtons(dev.isxander.controlify.controller.ControllerEntity controller){
    if(dev.isxander.controlify.bindings.ControlifyBindings.GUI_BACK.on(controller).guiPressed().get()&&backToParent())return;
    super.handleButtons(controller);
+  }
+ }
+ /** Capture the actual caller while the child screen is being constructed. */
+ public static class ParentBackProcessor extends dev.isxander.controlify.screenop.ScreenProcessor<net.minecraft.class_437>{
+  private final net.minecraft.class_437 parent;
+  public ParentBackProcessor(net.minecraft.class_437 screen){super(screen);parent=minecraft.field_1755;}
+  public boolean backToParent(){
+   playClackSound();
+   if(parent!=null&&parent!=screen)minecraft.method_1507(parent);else screen.method_25419();
+   return true;
+  }
+  protected void handleButtons(dev.isxander.controlify.controller.ControllerEntity controller){
+   if(dev.isxander.controlify.bindings.ControlifyBindings.GUI_BACK.on(controller).guiPressed().get()&&backToParent())return;
+   super.handleButtons(controller);
+  }
+ }
+ /** Cancel must run the dialog callback, without following its external link. */
+ public static final class CancelBackProcessor extends ParentBackProcessor{
+  public CancelBackProcessor(net.minecraft.class_407 screen){super(screen);}
+  public boolean backToParent(){
+   var cancel=getWidget("gui.cancel").orElse(null);
+   if(!(cancel instanceof net.minecraft.class_4185 button))return false;
+   playClackSound();button.method_25306();return true;
   }
  }
 }
