@@ -4,10 +4,19 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.*;
 
-/** Meat heals and tames Maulers without changing stored experience. */
+ /** Food heals; both food and consumed magic can establish trust. */
 public final class KnowlesCraftMaulerCare implements ModInitializer {
  public void onInitialize(){UseEntityCallback.EVENT.register((player,world,hand,entity,hit)->feed(player,world,hand,entity));}
  private static boolean tagged(class_1799 stack,String id){return stack.method_31573(class_6862.method_40092(class_7924.field_41197,new class_2960(id)));}
+ public static boolean isMagic(class_1799 stack){return !stack.method_7960()&&(stack.method_7942()||stack.method_7909()==class_1802.field_8598);}
+ public static boolean isLure(class_1799 stack){return isMeat(stack)||isMagic(stack);}
+ public static void offerTrust(class_1657 player,class_1309 mob){
+  var pet=(PetMauler)mob;
+  if(mob.method_37908().field_9236||pet.knowlescraft$owner()!=null)return;
+  boolean tamed=mob.method_6051().method_43048(3)==0;
+  if(tamed)pet.knowlescraft$tame(player.method_5667());
+  mob.method_37908().method_8421(mob,(byte)(tamed?7:6));
+ }
  public static boolean isMeat(class_1799 stack){
   if(stack.method_7960())return false;
   var food=stack.method_7909().method_19264();
@@ -26,15 +35,10 @@ public final class KnowlesCraftMaulerCare implements ModInitializer {
   if(player.method_7325()||!(target instanceof class_1309 mob)||!class_7923.field_41177.method_10221(target.method_5864()).toString().equals("friendsandfoes:mauler"))return class_1269.field_5811;
   var stack=player.method_5998(hand);
   var pet=(PetMauler)mob;boolean wild=pet.knowlescraft$owner()==null;
-  if(!mob.method_5805()||(!wild&&mob.method_6032()>=mob.method_6063())||!isMeat(stack))return class_1269.field_5811;
+  if(!mob.method_5805()||isMagic(stack)||(!wild&&mob.method_6032()>=mob.method_6063())||!isMeat(stack))return class_1269.field_5811;
   if(!world.field_9236){
    mob.method_6025(Math.max(1,stack.method_7909().method_19264().method_19230()));
-   if(wild){
-    var mauler=(com.faboslav.friendsandfoes.common.entity.MaulerEntity)mob;
-    boolean tamed=mob.method_6051().method_43048(3)==0;
-    if(tamed)pet.knowlescraft$tame(player.method_5667());
-    world.method_8421(mob,(byte)(tamed?7:6));
-   }
+   if(wild)offerTrust(player,mob);
    if(!player.method_31549().field_7477){
     var remainder=stack.method_7909().method_7858();stack.method_7934(1);
     if(remainder!=null){var returned=new class_1799(remainder);if(stack.method_7960())player.method_6122(hand,returned);else if(!player.method_31548().method_7394(returned))player.method_7328(returned,false);}

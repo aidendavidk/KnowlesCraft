@@ -54,6 +54,10 @@ public abstract class MaulerPetMixin extends class_1314 implements PetMauler,cla
  private void knowlescraft$load(class_2487 nbt,CallbackInfo ci){if(nbt.method_25928("KnowlesCraftOwner"))knowlescraft$tame(nbt.method_25926("KnowlesCraftOwner"));else knowlescraft$untame();}
  @Inject(method="method_6007",at=@At("HEAD"))
  private void knowlescraft$tick(CallbackInfo ci){knowlescraft$petTick();}
+ @Inject(method="tryToInteractWithEnhancedItem",at=@At("RETURN"))
+ private void knowlescraft$magicTrust(class_1657 player,class_1268 hand,class_1799 stack,CallbackInfoReturnable<Boolean> ci){
+  if(ci.getReturnValue())KnowlesCraftMaulerCare.offerTrust(player,this);
+ }
  @Inject(method="method_6121",at=@At("HEAD"),cancellable=true)
  private void knowlescraft$noFriendlyFire(class_1297 target,CallbackInfoReturnable<Boolean> ci){
   if(knowlescraft$owner!=null&&(!(target instanceof class_1309 living)||!knowlescraft$safeEnemy(living)))ci.setReturnValue(false);
@@ -101,7 +105,7 @@ public abstract class MaulerPetMixin extends class_1314 implements PetMauler,cla
  /** Shared MOVE control keeps luring, returning, combat and wandering mutually exclusive. */
  @Unique public class_1657 knowlescraft$lure(){
   class_1657 nearest=null;double distance=100;
-  for(var player:method_37908().method_18456())if(!player.method_7325()&&player.method_5805()&&(KnowlesCraftMaulerCare.isMeat(player.method_6047())||KnowlesCraftMaulerCare.isMeat(player.method_6079()))){
+  for(var player:method_37908().method_18456())if(!player.method_7325()&&player.method_5805()&&(KnowlesCraftMaulerCare.isLure(player.method_6047())||KnowlesCraftMaulerCare.isLure(player.method_6079()))){
    double d=method_5858(player);if(d<distance){distance=d;nearest=player;}
   }
   return nearest;
