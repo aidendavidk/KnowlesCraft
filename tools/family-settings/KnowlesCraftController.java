@@ -70,6 +70,7 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
    if(!event.newController())return;
    event.controller().input().ifPresent(input->{
     event.controller().genericConfig().config().showIngameGuide=false;
+    event.controller().genericConfig().config().showOnScreenKeyboard=false;
     configureSelectDefaults(input);
     configureNewProfile(input,true);
     Controlify.instance().config().setDirty();

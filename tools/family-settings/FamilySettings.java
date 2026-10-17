@@ -41,6 +41,7 @@ public final class FamilySettings implements PreLaunchEntrypoint {
         migrateControllerGuides(game);
         migrateSelectButton(game);
         migrateBackpackRadial(game);
+        migratePhysicalKeyboard(game);
         if(!deck)return;
         Path marker=game.resolve("config/knowlescraft/deck-preset-v1.applied");if(Files.exists(marker))return;
         boolean oled=Files.readString(dmi.resolve("product_name")).strip().equalsIgnoreCase("Galileo");
@@ -154,6 +155,21 @@ public final class FamilySettings implements PreLaunchEntrypoint {
         Files.createDirectories(marker.getParent());
         if(changed){Files.writeString(marker.getParent().resolve("controlify.before-backpack-radial.json"),before,StandardOpenOption.CREATE_NEW);atomicWrite(config,new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(root));}
         Files.writeString(marker,"Backpack Inventory available in radial menu; existing backpack entries preserved.\n");
+    }
+    static void migratePhysicalKeyboard(Path game)throws IOException{
+        Path marker=game.resolve("config/knowlescraft/physical-keyboard-v1.applied");
+        if(Files.exists(marker))return;
+        Path config=game.resolve("config/controlify.json");String before=Files.readString(config);
+        var root=com.google.gson.JsonParser.parseString(before).getAsJsonObject();boolean changed=false;
+        if(root.has("controllers"))for(var entry:root.getAsJsonObject("controllers").entrySet()){
+            var profile=entry.getValue().getAsJsonObject();if(!profile.has("config"))continue;
+            var configs=profile.getAsJsonObject("config");
+            var generic=configs.has("controlify:config/generic")?configs.getAsJsonObject("controlify:config/generic"):new com.google.gson.JsonObject();
+            generic.addProperty("show_on_screen_keyboard",false);configs.add("controlify:config/generic",generic);changed=true;
+        }
+        Files.createDirectories(marker.getParent());
+        if(changed){Path backup=marker.getParent().resolve("controlify.before-physical-keyboard.json");if(!Files.exists(backup))Files.writeString(backup,before,StandardOpenOption.CREATE_NEW);atomicWrite(config,new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(root));}
+        Files.writeString(marker,"Controller on-screen keyboard disabled. Physical keyboard remains available.\n");
     }
     static String option(String text,String key,String value){
         java.util.regex.Pattern p=java.util.regex.Pattern.compile("(?m)^"+java.util.regex.Pattern.quote(key)+":[^\\r\\n]*");
