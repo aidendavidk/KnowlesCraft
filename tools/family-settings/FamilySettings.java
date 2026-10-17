@@ -42,6 +42,7 @@ public final class FamilySettings implements PreLaunchEntrypoint {
         migrateSelectButton(game);
         migrateBackpackRadial(game);
         migratePhysicalKeyboard(game);
+        migrateCircleSneakZoom(game);
         if(!deck)return;
         Path marker=game.resolve("config/knowlescraft/deck-preset-v1.applied");if(Files.exists(marker))return;
         boolean oled=Files.readString(dmi.resolve("product_name")).strip().equalsIgnoreCase("Galileo");
@@ -105,6 +106,27 @@ public final class FamilySettings implements PreLaunchEntrypoint {
             atomicWrite(config,new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(root));
         }
         Files.writeString(marker,"Gameplay corner hints hidden. Menu guides and personal controls preserved.\n");
+    }
+    static void migrateCircleSneakZoom(Path game)throws IOException{
+        Path marker=game.resolve("config/knowlescraft/circle-sneak-r3-zoom-v1.applied");
+        if(Files.exists(marker))return;
+        Path config=game.resolve("config/controlify.json");String before=Files.readString(config);
+        var root=com.google.gson.JsonParser.parseString(before).getAsJsonObject();
+        if(root.has("controllers"))for(var entry:root.getAsJsonObject("controllers").entrySet()){
+            var configs=entry.getValue().getAsJsonObject().getAsJsonObject("config");if(configs==null)continue;
+            var input=configs.getAsJsonObject("controlify:input");if(input==null)continue;
+            var bindings=input.has("bindings")?input.getAsJsonObject("bindings"):new com.google.gson.JsonObject();
+            var sneak=new com.google.gson.JsonObject();sneak.addProperty("button","controlify:button/east");bindings.add("controlify:sneak",sneak);
+            var zoom=new com.google.gson.JsonObject();zoom.addProperty("button","controlify:button/right_stick");bindings.add("knowlescraft:toggle_zoom",zoom);
+            var waypoint=new com.google.gson.JsonObject();waypoint.addProperty("button","controlify:button/dpad_up");bindings.add("knowlescraft:waypoint_action",waypoint);
+            bindings.add("controlify:open_chat",new com.google.gson.JsonObject());
+            input.add("bindings",bindings);
+            var generic=configs.getAsJsonObject("controlify:config/generic");if(generic!=null)generic.addProperty("toggle_sneak",true);
+        }
+        Files.createDirectories(marker.getParent());
+        Files.writeString(marker.getParent().resolve("controlify.before-circle-sneak-r3-zoom.json"),before);
+        atomicWrite(config,new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(root));
+        Files.writeString(marker,"Circle toggles sneak; R3 toggles zoom; D-pad Up places/removes a looked-at waypoint. Subsequent personal bindings preserved.\n");
     }
     static void migrateSelectButton(Path game)throws IOException{
         Path marker=game.resolve("config/knowlescraft/select-map-hold-screenshot-v1.applied");
