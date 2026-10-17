@@ -1,0 +1,8 @@
+name = "Player Emotes"
+filename = "playeremotes-fabric-2.0.1+1.20.1.jar"
+side = "both"
+
+[download]
+url = "https://cdn.modrinth.com/data/TfUCUpDy/versions/ot67Rguv/playeremotes-fabric-2.0.1%2B1.20.1.jar"
+hash-format = "sha512"
+hash = "cc987da0356d7b9978d2c5c0fb92402e996108b25f9cee00bece6d9cb245011f25a337642939bb188e41f482cbe63b48a618aeaa8d9ecdcb6d86efe8c32c260a"

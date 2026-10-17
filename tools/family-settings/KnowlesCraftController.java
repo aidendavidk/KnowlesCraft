@@ -9,7 +9,8 @@ import java.util.List;
 
 /** Set up new profiles only; Controlify owns camera response and calibration. */
 public final class KnowlesCraftController implements ControlifyEntrypoint {
- private dev.isxander.controlify.api.bind.InputBindingSupplier mapScreenshot,touchpadSelect,toggleZoom,waypointAction;
+ private dev.isxander.controlify.api.bind.InputBindingSupplier mapScreenshot,touchpadSelect,toggleZoom,waypointAction,emoteAction;
+ private KnowlesCraftEmotes emoteFlow=new KnowlesCraftEmotes();
  private KnowlesCraftWaypoints waypointFlow=new KnowlesCraftWaypoints();
  private static boolean controllerZoom;
  private boolean zoomWasDown;
@@ -31,6 +32,11 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
   dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(journeymap.client.ui.fullscreen.Fullscreen.class,
    MapBackProcessor::new);
   var bindApi=dev.isxander.controlify.api.bind.ControlifyBindApi.get();
+  emoteAction=bindApi.registerBinding(builder->builder.id("knowlescraft","emote_action")
+   .name(net.minecraft.class_2561.method_43470("Emotes: Tap Last / Hold Wheel"))
+   .category(net.minecraft.class_2561.method_43470("KnowlesCraft"))
+   .defaultInput(new dev.isxander.controlify.bindings.input.ButtonInput(new class_2960("controlify:button/dpad_left")))
+   .allowedContexts(dev.isxander.controlify.bindings.BindContext.IN_GAME,dev.isxander.controlify.bindings.BindContext.RADIAL_MENU));
   waypointAction=bindApi.registerBinding(builder->builder.id("knowlescraft","waypoint_action")
    .name(net.minecraft.class_2561.method_43470("Place / Remove Looked-at Waypoint"))
    .category(net.minecraft.class_2561.method_43470("KnowlesCraft"))
@@ -55,7 +61,9 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
   ControlifyEvents.CONTROLLER_STATE_UPDATE.register(event->filterPauseInput(event.controller()));
   ControlifyEvents.ACTIVE_CONTROLLER_TICKED.register(event->{
    var controller=event.controller();var mc=net.minecraft.class_310.method_1551();
-   if(gestureController!=controller){selectFlow=new SelectFlow();waypointFlow=new KnowlesCraftWaypoints();gestureController=controller;}
+   KnowlesCraftRadial.frame(mc,controller);
+   if(gestureController!=controller){selectFlow=new SelectFlow();waypointFlow=new KnowlesCraftWaypoints();emoteFlow=new KnowlesCraftEmotes();gestureController=controller;}
+   emoteFlow.tick(mc,controller,emoteAction.on(controller));
    var waypointBinding=waypointAction.on(controller);
    waypointFlow.tick(mc,waypointBinding.boundInput().state(controller.input().orElseThrow().rawStateNow())>=controller.input().orElseThrow().confObj().buttonActivationThreshold);
    boolean zoomDown=toggleZoom.on(controller).digitalNow();
@@ -74,7 +82,7 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
 
   });
   net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.END_CLIENT_TICK.register(mc->{if(mc.field_1755!=null||mc.field_1724==null)controllerZoom=false;});
-  ControlifyEvents.CONTROLLER_DISCONNECTED.register(event->{controllerZoom=false;zoomWasDown=false;waypointFlow=new KnowlesCraftWaypoints();selectFlow=new SelectFlow();gestureController=null;PAUSE_GESTURES.clear();PAUSE_BLOCKED.clear();});
+  ControlifyEvents.CONTROLLER_DISCONNECTED.register(event->{KnowlesCraftRadial.forget(event.controller());controllerZoom=false;zoomWasDown=false;waypointFlow=new KnowlesCraftWaypoints();emoteFlow=new KnowlesCraftEmotes();selectFlow=new SelectFlow();gestureController=null;PAUSE_GESTURES.clear();PAUSE_BLOCKED.clear();});
   // Some ported mods register outside Fabric's key registry. Correlate those too.
   for(var key:net.minecraft.class_310.method_1551().field_1690.field_1839){
    String name=key.method_1431();
@@ -103,6 +111,7 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
     input.confObj().mixedInput=true;
     input.getBinding(new class_2960("controlify:sneak")).setBoundInput(new dev.isxander.controlify.bindings.input.ButtonInput(new class_2960("controlify:button/east")));
     input.getBinding(new class_2960("controlify:open_chat")).setBoundInput(dev.isxander.controlify.bindings.input.EmptyInput.INSTANCE);
+    input.getBinding(new class_2960("controlify:pick_block")).setBoundInput(dev.isxander.controlify.bindings.input.EmptyInput.INSTANCE);
     var actions=List.of("fabric-key-binding-api-v1:key.journeymap.map_toggle_alt",
      "fabric-key-binding-api-v1:key.travelersbackpack.inventory",
      "fabric-key-binding-api-v1:key.plasmovoice.settings",

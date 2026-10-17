@@ -106,7 +106,7 @@ metafile = true
 
 [[files]]
 file = "mods/family-settings.pw.toml"
-hash = "aa392f466e45b7652c132aced166566454b14445b4bdadb10e07afb7e29f9d0a"
+hash = "c7dfd1c8aac480552adec7786899a461233b71957a2a8c9fcbfd08ba84ba7fea"
 metafile = true
 
 [[files]]
@@ -401,7 +401,7 @@ metafile = true
 
 [[files]]
 file = "KnowlesCraft-Controls.txt"
-hash = "0e81d76ae460646557ae7e39612bf701ad008a612fd4a6365627a0a725f9c918"
+hash = "f4bdb07d9c0adebab7c74b1f694e8ec2914d0377affe57d373e3318f46e77cdd"
 
 [[files]]
 file = "mods/controlify.pw.toml"
@@ -411,4 +411,9 @@ metafile = true
 [[files]]
 file = "mods/knowlescraft-mauler-care.pw.toml"
 hash = "30cefd0b348bbfe4365c544ce2cfd6ddc14e0f9c4d84707ed7f51b97c63eae58"
+metafile = true
+
+[[files]]
+file = "mods/playeremotes.pw.toml"
+hash = "eec417498aa9a9d04246cc4892a0ef9aa842fc62909f54d117fdaac8f1d6c9d4"
 metafile = true

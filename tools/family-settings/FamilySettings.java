@@ -43,6 +43,7 @@ public final class FamilySettings implements PreLaunchEntrypoint {
         migrateBackpackRadial(game);
         migratePhysicalKeyboard(game);
         migrateCircleSneakZoom(game);
+        migrateEmoteLeft(game);
         if(!deck)return;
         Path marker=game.resolve("config/knowlescraft/deck-preset-v1.applied");if(Files.exists(marker))return;
         boolean oled=Files.readString(dmi.resolve("product_name")).strip().equalsIgnoreCase("Galileo");
@@ -106,6 +107,22 @@ public final class FamilySettings implements PreLaunchEntrypoint {
             atomicWrite(config,new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(root));
         }
         Files.writeString(marker,"Gameplay corner hints hidden. Menu guides and personal controls preserved.\n");
+    }
+    static void migrateEmoteLeft(Path game)throws IOException{
+        Path marker=game.resolve("config/knowlescraft/emote-left-wheel-v1.applied");if(Files.exists(marker))return;
+        Path config=game.resolve("config/controlify.json");String before=Files.readString(config);
+        var root=com.google.gson.JsonParser.parseString(before).getAsJsonObject();
+        if(root.has("controllers"))for(var entry:root.getAsJsonObject("controllers").entrySet()){
+            var configs=entry.getValue().getAsJsonObject().getAsJsonObject("config");if(configs==null)continue;
+            var input=configs.getAsJsonObject("controlify:input");if(input==null)continue;
+            var bindings=input.has("bindings")?input.getAsJsonObject("bindings"):new com.google.gson.JsonObject();
+            bindings.add("controlify:pick_block",new com.google.gson.JsonObject());
+            var emote=new com.google.gson.JsonObject();emote.addProperty("button","controlify:button/dpad_left");bindings.add("knowlescraft:emote_action",emote);input.add("bindings",bindings);
+        }
+        Files.createDirectories(marker.getParent());Files.writeString(marker.getParent().resolve("controlify.before-emote-left-wheel.json"),before);
+        atomicWrite(config,new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(root));Files.writeString(marker,"Left: tap last emote, hold emote wheel. Pick Block remains in utility radial.\n");
+        Path options=game.resolve("options.txt");String optionText=Files.exists(options)?Files.readString(options):"version:3465\n";
+        if(!optionText.contains("key_key.playeremotes.wheel:")||optionText.contains("key_key.playeremotes.wheel:key.keyboard.b"))atomicWrite(options,option(optionText,"key_key.playeremotes.wheel","key.keyboard.h"));
     }
     static void migrateCircleSneakZoom(Path game)throws IOException{
         Path marker=game.resolve("config/knowlescraft/circle-sneak-r3-zoom-v1.applied");
