@@ -8,7 +8,7 @@ STANDARD GAMEPAD (Xbox names; PlayStation prompts follow your controller)
 Left stick: move; click to sprint. Right stick: look; click to toggle zoom.
 A: jump. B: toggle sneak in gameplay; close menus. X: swap hands. Y: inventory.
 RT: mine/attack. LT: use/place. LB/RB: hotbar. Menu: pause.
-D-pad up: place a waypoint on the aimed-at block (within 128 blocks); aim horizontally toward an existing waypoint to remove it. One action per press; no hold action. Chat stays in the radial menu. Down: drop. Left: pick block. Right: radial menu.
+D-pad up: place a waypoint on the aimed-at block (within 128 blocks); aim near an existing waypoint marker to remove it. One action per press; no hold action. Chat stays in the radial menu. Down: drop. Left: pick block. Right: radial menu.
 Select/View/Touchpad: tap for map; hold 0.5 seconds for one screenshot.
 Holding does not open the map. In the fullscreen map, Select closes the map;
 virtual mouse stays enabled. Other menus retain their cursor toggle.

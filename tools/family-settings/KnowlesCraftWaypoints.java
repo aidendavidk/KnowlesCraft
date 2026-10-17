@@ -3,7 +3,7 @@ import net.minecraft.*;
 import journeymap.client.waypoint.*;
 import java.util.*;
 
-/** One action per press. Waypoint targeting compares horizontal bearing only. */
+/** One action per press, with matching horizontal and vertical aiming tolerance. */
 public final class KnowlesCraftWaypoints {
  private boolean wasDown;
  public boolean pressed(boolean down,boolean inGame){boolean fire=down&&!wasDown&&inGame;wasDown=down;return fire;}
@@ -15,6 +15,9 @@ public final class KnowlesCraftWaypoints {
    if(!waypoint.isEnable()||!waypoint.isPersistent()||waypoint.isDeathPoint()||!waypoint.getDimensions().contains(dimension)||(waypoint.getGroup()!=null&&!waypoint.getGroup().isEnable()))continue;
    double dx=waypoint.getBlockCenteredX()-eye.field_1352,dz=waypoint.getBlockCenteredZ()-eye.field_1350,distance=Math.hypot(dx,dz);
    if(distance<0.5)continue;
+   double verticalAngle=Math.atan2(waypoint.getBlockCenteredY()-eye.field_1351,distance);
+   double lookVerticalAngle=Math.atan2(look.field_1351,headingLength);
+   if(Math.abs(verticalAngle-lookVerticalAngle)>Math.toRadians(2))continue;
    double alignment=(dx*look.field_1352+dz*look.field_1350)/(distance*headingLength);
    if(alignment>bestAngle+1e-9||(Math.abs(alignment-bestAngle)<1e-9&&distance<bestDistance)){
     best=waypoint;bestAngle=alignment;bestDistance=distance;
