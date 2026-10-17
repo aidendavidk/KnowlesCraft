@@ -14,9 +14,9 @@ public abstract class KnowlesCraftRadialItemsMixin {
  private static void knowlescraft$rememberChoice(class_2960 id,ControllerEntity controller,CallbackInfoReturnable<RadialMenuScreen.RadialItem> ci){
   var item=ci.getReturnValue();if(item==RadialItems.EMPTY_ACTION)return;
   ci.setReturnValue(new RadialMenuScreen.RadialItem(){
-   public class_2561 name(){return item.name();}
+   public class_2561 name(){return id.toString().equals("knowlescraft:toggle_hud")?class_2561.method_43470(class_310.method_1551().field_1690.field_1842?"Show HUD":"Hide HUD"):item.name();}
    public RadialIcon icon(){return item.icon();}
-   public boolean playAction(){boolean played=item.playAction();if(played)KnowlesCraftRadial.remember(controller,id);return played;}
+   public boolean playAction(){boolean played;if(id.toString().equals("knowlescraft:toggle_hud")){family.settings.KnowlesCraftController.toggleHud();played=true;}else played=item.playAction();if(played)KnowlesCraftRadial.remember(controller,id);return played;}
   });
  }
 }

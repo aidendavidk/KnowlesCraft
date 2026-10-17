@@ -8,6 +8,7 @@ import dev.isxander.controlify.gui.screen.RadialMenuScreen;
 
 /** Delays the native wheel and reuses its own action dispatch for a quick tap. */
 public final class KnowlesCraftRadial {
+ public interface ImmediateBinding {void knowlescraft$pressNow(dev.isxander.controlify.controller.input.ControllerStateView state);}
  public static final class Gesture {
   private boolean down,opened,blocked;private long started;
   public int update(boolean pressed,boolean allowed,long now){
@@ -47,7 +48,8 @@ public final class KnowlesCraftRadial {
    String id=last(controller);class_2960 key=null;
    try{if(id!=null)key=new class_2960(id);}catch(Exception ignored){}
    if(key!=null&&Arrays.asList(input.confObj().radialActions).contains(key)){
-    var binding=input.getBinding(key);if(binding!=null&&binding.radialIcon().isPresent()){binding.fakePress();return false;}
+    if(key.toString().equals("knowlescraft:toggle_hud")){KnowlesCraftController.toggleHud();return false;}
+    var binding=input.getBinding(key);if(binding!=null&&binding.radialIcon().isPresent()){((ImmediateBinding)binding).knowlescraft$pressNow(input.rawStateNow());return false;}
    }
    mc.field_1724.method_7353(class_2561.method_43470("Hold D-pad Right to choose a radial shortcut"),true);
   }

@@ -9,7 +9,8 @@ import java.util.List;
 
 /** Set up new profiles only; Controlify owns camera response and calibration. */
 public final class KnowlesCraftController implements ControlifyEntrypoint {
- private dev.isxander.controlify.api.bind.InputBindingSupplier mapScreenshot,touchpadSelect,toggleZoom,waypointAction,emoteAction;
+ private dev.isxander.controlify.api.bind.InputBindingSupplier mapScreenshot,touchpadSelect,toggleZoom,waypointAction,emoteAction,toggleHud;
+ public static void toggleHud(){var mc=net.minecraft.class_310.method_1551();mc.field_1690.field_1842=!mc.field_1690.field_1842;}
  private KnowlesCraftEmotes emoteFlow=new KnowlesCraftEmotes();
  private KnowlesCraftWaypoints waypointFlow=new KnowlesCraftWaypoints();
  private static boolean controllerZoom;
@@ -32,6 +33,16 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
   dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(journeymap.client.ui.fullscreen.Fullscreen.class,
    MapBackProcessor::new);
   var bindApi=dev.isxander.controlify.api.bind.ControlifyBindApi.get();
+  var hudIcon=new class_2960("knowlescraft:hud");
+  dev.isxander.controlify.bindings.RadialIcons.registerIcon(hudIcon,(graphics,x,y,delta)->{
+   graphics.method_25294(x,y,x+16,y+12,0xffeeeeee);graphics.method_25294(x+1,y+1,x+15,y+11,0xff333333);
+   graphics.method_25294(x+3,y+8,x+13,y+9,0xffeeeeee);graphics.method_25294(x+6,y+13,x+10,y+14,0xffeeeeee);
+  });
+  toggleHud=bindApi.registerBinding(builder->builder.id("knowlescraft","toggle_hud")
+   .name(net.minecraft.class_2561.method_43470("Hide / Show HUD"))
+   .category(net.minecraft.class_2561.method_43470("KnowlesCraft"))
+   .defaultInput(dev.isxander.controlify.bindings.input.EmptyInput.INSTANCE)
+   .radialCandidate(hudIcon).allowedContexts(dev.isxander.controlify.bindings.BindContext.IN_GAME));
   emoteAction=bindApi.registerBinding(builder->builder.id("knowlescraft","emote_action")
    .name(net.minecraft.class_2561.method_43470("Emotes: Tap Last / Hold Wheel"))
    .category(net.minecraft.class_2561.method_43470("KnowlesCraft"))
@@ -61,6 +72,7 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
   ControlifyEvents.CONTROLLER_STATE_UPDATE.register(event->filterPauseInput(event.controller()));
   ControlifyEvents.ACTIVE_CONTROLLER_TICKED.register(event->{
    var controller=event.controller();var mc=net.minecraft.class_310.method_1551();
+   if(mc.field_1755==null&&mc.field_1724!=null&&toggleHud.on(controller).justPressed())toggleHud();
    KnowlesCraftRadial.frame(mc,controller);
    if(gestureController!=controller){selectFlow=new SelectFlow();waypointFlow=new KnowlesCraftWaypoints();emoteFlow=new KnowlesCraftEmotes();gestureController=controller;}
    emoteFlow.tick(mc,controller,emoteAction.on(controller));
@@ -115,7 +127,7 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
     var actions=List.of("fabric-key-binding-api-v1:key.journeymap.map_toggle_alt",
      "fabric-key-binding-api-v1:key.travelersbackpack.inventory",
      "fabric-key-binding-api-v1:key.plasmovoice.settings",
-     "fabric-key-binding-api-v1:key.journeymap.create_waypoint",
+     "knowlescraft:toggle_hud",
      "controlify:open_chat","controlify:change_perspective",
      "controlify:show_player_list","controlify:pick_block");
     // Missing optional mod actions never leave invalid entries in the radial menu.
