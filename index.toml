@@ -106,7 +106,7 @@ metafile = true
 
 [[files]]
 file = "mods/family-settings.pw.toml"
-hash = "f2ca4c97f87249eb982b7005aa049b72c354c913ae05f1c8ef5cb70cf06daa9f"
+hash = "7109006dcbd17b7927160b876dc0a5587ce94d714950fb77f56b425a24958208"
 metafile = true
 
 [[files]]
@@ -406,4 +406,9 @@ hash = "7020f75ec574826ed5c25be78c14139c3267af89b048ede2b0159f30b1ad8e27"
 [[files]]
 file = "mods/controlify.pw.toml"
 hash = "6843619171fd9b8c17d79f62b255ac8a155c5765975c4310942b1c9c5337124c"
+metafile = true
+
+[[files]]
+file = "mods/knowlescraft-mauler-care.pw.toml"
+hash = "58454b894069b5f4671591fe5e5ce5c71546e385d897145e091285dfbfaa992f"
 metafile = true

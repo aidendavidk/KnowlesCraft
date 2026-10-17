@@ -40,6 +40,7 @@ public final class FamilySettings implements PreLaunchEntrypoint {
         }
         migrateControllerGuides(game);
         migrateSelectButton(game);
+        migrateBackpackRadial(game);
         if(!deck)return;
         Path marker=game.resolve("config/knowlescraft/deck-preset-v1.applied");if(Files.exists(marker))return;
         boolean oled=Files.readString(dmi.resolve("product_name")).strip().equalsIgnoreCase("Galileo");
@@ -132,6 +133,27 @@ public final class FamilySettings implements PreLaunchEntrypoint {
             atomicWrite(config,new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(root));
         }
         Files.writeString(marker,"Select: tap map, hold screenshot. Later personal bindings preserved.\n");
+    }
+    static void migrateBackpackRadial(Path game)throws IOException{
+        Path marker=game.resolve("config/knowlescraft/backpack-radial-v1.applied");
+        if(Files.exists(marker))return;
+        Path config=game.resolve("config/controlify.json");String before=Files.readString(config);
+        var root=com.google.gson.JsonParser.parseString(before).getAsJsonObject();boolean changed=false;
+        String backpack="fabric-key-binding-api-v1:key.travelersbackpack.inventory";
+        if(root.has("controllers"))for(var entry:root.getAsJsonObject("controllers").entrySet()){
+            var profile=entry.getValue().getAsJsonObject();if(!profile.has("config"))continue;
+            var configs=profile.getAsJsonObject("config");if(!configs.has("controlify:input"))continue;
+            var input=configs.getAsJsonObject("controlify:input");if(!input.has("radial_actions"))continue;
+            var actions=input.getAsJsonArray("radial_actions");boolean present=false;
+            for(var action:actions)if(action.getAsString().equals(backpack))present=true;
+            if(present||actions.isEmpty())continue;
+            int replace=actions.size()-1;
+            for(int i=0;i<actions.size();i++)if(actions.get(i).getAsString().equals("controlify:pick_block")){replace=i;break;}
+            actions.set(replace,new com.google.gson.JsonPrimitive(backpack));changed=true;
+        }
+        Files.createDirectories(marker.getParent());
+        if(changed){Files.writeString(marker.getParent().resolve("controlify.before-backpack-radial.json"),before,StandardOpenOption.CREATE_NEW);atomicWrite(config,new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(root));}
+        Files.writeString(marker,"Backpack Inventory available in radial menu; existing backpack entries preserved.\n");
     }
     static String option(String text,String key,String value){
         java.util.regex.Pattern p=java.util.regex.Pattern.compile("(?m)^"+java.util.regex.Pattern.quote(key)+":[^\\r\\n]*");
