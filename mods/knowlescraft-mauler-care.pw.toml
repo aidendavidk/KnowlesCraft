@@ -1,8 +1,8 @@
 name = "KnowlesCraft Mauler Care"
-filename = "knowlescraft-mauler-care-1.0.1.jar"
+filename = "knowlescraft-mauler-care-1.1.0.jar"
 side = "both"
 
 [download]
-url = "https://raw.githubusercontent.com/aidendavidk/KnowlesCraft/main/tools/mauler-care/knowlescraft-mauler-care-1.0.1.jar"
+url = "https://raw.githubusercontent.com/aidendavidk/KnowlesCraft/main/tools/mauler-care/knowlescraft-mauler-care-1.1.0.jar"
 hash-format = "sha512"
-hash = "abbf4ebd2ad2cdba6e8e726095a4dfb743866ab311ef4ea7c5553487931225d15b11c54a5eee44932f862471976c9a1af929691cd41f6073ce621765d7855860"
+hash = "0c37df3df736ab1cf18537e986d9ded97d20db756f55513ae68879dff0482b755c4ae8422a2b2ae6461c397177e51d2b3ef15377a6569a1f4762eeb6fdf0c1f0"
