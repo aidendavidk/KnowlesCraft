@@ -33,7 +33,7 @@ public final class KnowlesCraftMaulerCare implements ModInitializer {
     var mauler=(com.faboslav.friendsandfoes.common.entity.MaulerEntity)mob;
     boolean tamed=mob.method_6051().method_43048(3)==0;
     if(tamed)pet.knowlescraft$tame(player.method_5667());
-    mauler.spawnParticles(tamed?class_2398.field_11201:class_2398.field_11251,7);
+    world.method_8421(mob,(byte)(tamed?7:6));
    }
    if(!player.method_31549().field_7477){
     var remainder=stack.method_7909().method_7858();stack.method_7934(1);

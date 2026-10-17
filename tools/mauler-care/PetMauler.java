@@ -3,6 +3,7 @@ import java.util.UUID;
 public interface PetMauler {
  UUID knowlescraft$owner();
  void knowlescraft$tame(UUID owner);
+ void knowlescraft$untame();
  void knowlescraft$petTick();
  net.minecraft.class_1657 knowlescraft$lure();
  boolean knowlescraft$returning();

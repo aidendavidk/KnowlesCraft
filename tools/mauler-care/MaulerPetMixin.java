@@ -9,19 +9,33 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MaulerEntity.class)
-public abstract class MaulerPetMixin extends class_1314 implements PetMauler {
+public abstract class MaulerPetMixin extends class_1314 implements PetMauler,class_6025 {
  @Unique private UUID knowlescraft$owner;
  @Unique private int knowlescraft$lastHurt=-1,knowlescraft$chaseTicks;
  @Unique private class_243 knowlescraft$origin;
  @Unique private boolean knowlescraft$returning,knowlescraft$installed;
  protected MaulerPetMixin(class_1299<? extends class_1314> type,class_1937 world){super(type,world);}
  public UUID knowlescraft$owner(){return knowlescraft$owner;}
+ public UUID method_6139(){return knowlescraft$owner;}
+ public class_1924 method_48926(){return method_37908();}
+ @Override public void method_5711(byte status){
+  if(status==6||status==7){
+   var particle=status==7?class_2398.field_11201:class_2398.field_11251;
+   for(int i=0;i<7;i++)method_37908().method_8406(particle,method_23322(1),method_23319()+0.5,method_23325(1),method_6051().method_43059()*0.02,method_6051().method_43059()*0.02,method_6051().method_43059()*0.02);
+  }else super.method_5711(status);
+ }
  @Inject(method="<init>",at=@At("TAIL"))
  private void knowlescraft$addLure(class_1299<?> type,class_1937 world,CallbackInfo ci){field_6201.method_6277(1,new PetMovementGoal(this));}
  public void knowlescraft$tame(UUID owner){
   knowlescraft$owner=owner;method_5971();
   var player=method_37908().method_18470(owner);knowlescraft$lastHurt=player==null?-1:player.method_6117();
   knowlescraft$install();
+ }
+ public void knowlescraft$untame(){
+  if(knowlescraft$owner==null)return;
+  knowlescraft$owner=null;knowlescraft$installed=false;knowlescraft$origin=null;knowlescraft$returning=false;knowlescraft$lastHurt=-1;
+  field_6201.method_35113(goal->true);field_6185.method_35113(goal->true);method_5959();field_6201.method_6277(1,new PetMovementGoal(this));
+  method_5980(null);method_6015(null);var self=(MaulerEntity)(Object)this;self.method_29509();self.setTicksUntilNextBurrowingDown(1200);
  }
  @Unique private void knowlescraft$install(){
   if(knowlescraft$installed)return;knowlescraft$installed=true;
@@ -34,7 +48,7 @@ public abstract class MaulerPetMixin extends class_1314 implements PetMauler {
  @Inject(method="method_5652",at=@At("TAIL"))
  private void knowlescraft$save(class_2487 nbt,CallbackInfo ci){if(knowlescraft$owner!=null)nbt.method_25927("KnowlesCraftOwner",knowlescraft$owner);}
  @Inject(method="method_5749",at=@At("TAIL"))
- private void knowlescraft$load(class_2487 nbt,CallbackInfo ci){if(nbt.method_25928("KnowlesCraftOwner"))knowlescraft$tame(nbt.method_25926("KnowlesCraftOwner"));}
+ private void knowlescraft$load(class_2487 nbt,CallbackInfo ci){if(nbt.method_25928("KnowlesCraftOwner"))knowlescraft$tame(nbt.method_25926("KnowlesCraftOwner"));else knowlescraft$untame();}
  @Inject(method="method_6007",at=@At("HEAD"))
  private void knowlescraft$tick(CallbackInfo ci){knowlescraft$petTick();}
  @Inject(method="method_6121",at=@At("HEAD"),cancellable=true)
