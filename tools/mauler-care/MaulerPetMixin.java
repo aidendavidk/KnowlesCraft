@@ -13,6 +13,8 @@ public abstract class MaulerPetMixin extends class_1314 implements PetMauler,cla
  @Unique private UUID knowlescraft$owner;
  @Unique private int knowlescraft$lastHurt=-1,knowlescraft$chaseTicks;
  @Unique private class_243 knowlescraft$origin;
+ @Unique private UUID knowlescraft$disengaged;
+ @Unique private int knowlescraft$ignoreUntil;
  @Unique private boolean knowlescraft$returning,knowlescraft$installed;
  protected MaulerPetMixin(class_1299<? extends class_1314> type,class_1937 world){super(type,world);}
  public UUID knowlescraft$owner(){return knowlescraft$owner;}
@@ -62,20 +64,23 @@ public abstract class MaulerPetMixin extends class_1314 implements PetMauler,cla
   if(method_5968()!=null){
    var enemy=method_5968();
    if(!knowlescraft$safeEnemy(enemy)||knowlescraft$origin==null||enemy.method_19538().method_1025(knowlescraft$origin)>256||method_19538().method_1025(knowlescraft$origin)>256||++knowlescraft$chaseTicks>600){
+    knowlescraft$disengaged=enemy.method_5667();knowlescraft$ignoreUntil=field_6012+200;
     method_5980(null);self.method_29509();knowlescraft$returning=knowlescraft$origin!=null;method_5942().method_6340();
    }
   }else if(knowlescraft$origin!=null&&!knowlescraft$returning)knowlescraft$returning=true;
-  var owner=method_37908().method_18470(knowlescraft$owner);
-  if(owner==null)return;
-  int hurt=owner.method_6117();
-  if(hurt==knowlescraft$lastHurt)return;knowlescraft$lastHurt=hurt;
-  var enemy=owner.method_6065();
-  if(knowlescraft$safeEnemy(enemy)&&method_5858(owner)<=256&&method_5858(enemy)<=256){
+  if(method_6065() instanceof class_1657){method_6015(null);if(method_5968()==null)self.method_29509();}
+  if(method_5968()!=null||knowlescraft$returning||field_6012%5!=0)return;
+  class_1309 enemy=null;double nearest=256;
+  for(var entity:method_37908().method_8333(this,method_5829().method_1014(16),candidate->candidate instanceof class_1309&&candidate instanceof class_1569)){
+   var candidate=(class_1309)entity;double distance=method_5858(candidate);
+   if(knowlescraft$safeEnemy(candidate)&&distance<nearest&&!(candidate.method_5667().equals(knowlescraft$disengaged)&&field_6012<knowlescraft$ignoreUntil)){enemy=candidate;nearest=distance;}
+  }
+  if(enemy!=null){
    knowlescraft$origin=method_19538();knowlescraft$returning=false;knowlescraft$chaseTicks=0;method_5980(enemy);
   }
  }
  @Unique private boolean knowlescraft$safeEnemy(class_1309 enemy){
-  return enemy instanceof class_1308&&enemy!=this&&enemy.method_5805()&&!(enemy instanceof class_1321 pet&&pet.method_6181())&&!(enemy instanceof PetMauler pet&&pet.knowlescraft$owner()!=null);
+  return enemy instanceof class_1569&&enemy instanceof class_1308&&!(enemy instanceof class_1548)&&!(enemy instanceof class_1571)&&enemy!=this&&enemy.method_5805()&&!(enemy instanceof class_1321 pet&&pet.method_6181())&&!(enemy instanceof PetMauler pet&&pet.knowlescraft$owner()!=null);
  }
  /** Shared MOVE control keeps luring, returning, combat and wandering mutually exclusive. */
  @Unique public class_1657 knowlescraft$lure(){
