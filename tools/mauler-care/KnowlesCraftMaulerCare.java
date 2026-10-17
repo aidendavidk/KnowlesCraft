@@ -32,7 +32,7 @@ public final class KnowlesCraftMaulerCare implements ModInitializer {
     var remainder=stack.method_7909().method_7858();stack.method_7934(1);
     if(remainder!=null){var returned=new class_1799(remainder);if(stack.method_7960())player.method_6122(hand,returned);else if(!player.method_31548().method_7394(returned))player.method_7328(returned,false);}
    }
-   mob.method_5783(class_3417.field_20614,1,1);
+   mob.method_5783(class_7923.field_41172.method_10223(new class_2960("friendsandfoes:entity.mauler.bite")),1,1);
   }
   return class_1269.method_29236(world.field_9236);
  }
