@@ -45,6 +45,7 @@ public final class FamilySettings implements PreLaunchEntrypoint {
         migrateCircleSneakZoom(game);
         migrateEmoteLeft(game);
         migrateRadialWaypoint(game);
+        migrateRadialLibrary(game);
         if(!deck)return;
         Path marker=game.resolve("config/knowlescraft/deck-preset-v1.applied");if(Files.exists(marker))return;
         boolean oled=Files.readString(dmi.resolve("product_name")).strip().equalsIgnoreCase("Galileo");
@@ -108,6 +109,20 @@ public final class FamilySettings implements PreLaunchEntrypoint {
             atomicWrite(config,new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(root));
         }
         Files.writeString(marker,"Gameplay corner hints hidden. Menu guides and personal controls preserved.\n");
+    }
+    static void migrateRadialLibrary(Path game)throws IOException{
+        Path marker=game.resolve("config/knowlescraft/radial-emote-library-v1.applied");if(Files.exists(marker))return;
+        Path config=game.resolve("config/controlify.json");String before=Files.readString(config);
+        var root=com.google.gson.JsonParser.parseString(before).getAsJsonObject();boolean changed=false;
+        if(root.has("controllers"))for(var entry:root.getAsJsonObject("controllers").entrySet()){
+            var configs=entry.getValue().getAsJsonObject().getAsJsonObject("config");if(configs==null)continue;
+            var input=configs.getAsJsonObject("controlify:input");if(input==null||!input.has("radial_actions"))continue;
+            var actions=input.getAsJsonArray("radial_actions");
+            for(int i=0;i<actions.size();i++)if(actions.get(i).getAsString().equals("fabric-key-binding-api-v1:key.journeymap.map_toggle_alt")){actions.set(i,new com.google.gson.JsonPrimitive("knowlescraft:emote_library"));changed=true;}
+        }
+        Files.createDirectories(marker.getParent());
+        if(changed){Files.writeString(marker.getParent().resolve("controlify.before-radial-emote-library.json"),before);atomicWrite(config,new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(root));}
+        Files.writeString(marker,"Map replaced by Emote Library in utility radial; Select map preserved.\n");
     }
     static void migrateRadialWaypoint(Path game)throws IOException{
         Path marker=game.resolve("config/knowlescraft/radial-hud-v1.applied");if(Files.exists(marker))return;

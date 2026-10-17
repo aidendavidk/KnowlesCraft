@@ -48,6 +48,7 @@ public final class KnowlesCraftRadial {
    String id=last(controller);class_2960 key=null;
    try{if(id!=null)key=new class_2960(id);}catch(Exception ignored){}
    if(key!=null&&Arrays.asList(input.confObj().radialActions).contains(key)){
+    if(key.toString().equals("knowlescraft:emote_library")){KnowlesCraftEmotes.requestLibrary();return false;}
     if(key.toString().equals("knowlescraft:toggle_hud")){KnowlesCraftController.toggleHud();return false;}
     var binding=input.getBinding(key);if(binding!=null&&binding.radialIcon().isPresent()){((ImmediateBinding)binding).knowlescraft$pressNow(input.rawStateNow());return false;}
    }

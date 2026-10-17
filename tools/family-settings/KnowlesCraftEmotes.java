@@ -11,6 +11,18 @@ import java.util.*;
 
 /** The same tap/hold gesture as the utility wheel, with native emote playback. */
 public final class KnowlesCraftEmotes {
+ public static void cancelForAttack(){
+  var player=class_310.method_1551().field_1724;if(player==null)return;
+  var active=com.yamikhal.playeremotes.client.animation.EmotePlayers.get(player.method_5667());
+  if(active!=null&&!active.isStopping())PlayerEmotesClient.stop();
+ }
+ private static boolean pendingLibrary;
+ public static void requestLibrary(){pendingLibrary=true;}
+ public static void flushLibrary(class_310 mc){
+  if(!pendingLibrary)return;pendingLibrary=false;
+  if(mc.field_1755==null)mc.method_1507(new com.yamikhal.playeremotes.client.gui.WheelEditScreen(null));
+ }
+
  private final KnowlesCraftRadial.Gesture gesture=new KnowlesCraftRadial.Gesture();
  private static final String[] DEFAULTS={"wave","clap","cheer","laugh","facepalm","sit_rest","robot_dance","bow"};
  public static void seedFavorites(){

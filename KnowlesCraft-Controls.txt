@@ -17,7 +17,7 @@ B / Circle goes back one menu level, including Options back to Pause.
 
 Tap D-pad right to repeat the last radial action selected with this controller.
 Hold D-pad right for 0.25 seconds, select with the right stick, then release for:
-map, backpack, voice settings, hide/show HUD, chat, perspective, player list, pick block.
+emote library, backpack, voice settings, hide/show HUD, chat, perspective, player list, pick block.
 Other mod keybindings (including Create and Zoomify) are available in Controlify's
 binding screen. Assign held actions directly to a spare button if you use them.
 Inventories: A selects, X takes half, Y quick-moves; B closes.
@@ -58,3 +58,6 @@ Server settings are unchanged. Defaults apply once; later personal changes stay.
 Original options and Iris settings are kept under config/knowlescraft/.
 
 Type /knowlescraft in game for help and your current keyboard bindings.
+
+Attack cancels the current emote immediately and performs the normal attack/mining action.
+Emote Library edits the Left wheel favorites and browses all animations.

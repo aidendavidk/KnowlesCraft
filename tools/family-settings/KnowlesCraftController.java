@@ -9,7 +9,7 @@ import java.util.List;
 
 /** Set up new profiles only; Controlify owns camera response and calibration. */
 public final class KnowlesCraftController implements ControlifyEntrypoint {
- private dev.isxander.controlify.api.bind.InputBindingSupplier mapScreenshot,touchpadSelect,toggleZoom,waypointAction,emoteAction,toggleHud;
+ private dev.isxander.controlify.api.bind.InputBindingSupplier mapScreenshot,touchpadSelect,toggleZoom,waypointAction,emoteAction,toggleHud,emoteLibrary;
  public static void toggleHud(){var mc=net.minecraft.class_310.method_1551();mc.field_1690.field_1842=!mc.field_1690.field_1842;}
  private KnowlesCraftEmotes emoteFlow=new KnowlesCraftEmotes();
  private KnowlesCraftWaypoints waypointFlow=new KnowlesCraftWaypoints();
@@ -38,6 +38,13 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
    graphics.method_25294(x,y,x+16,y+12,0xffeeeeee);graphics.method_25294(x+1,y+1,x+15,y+11,0xff333333);
    graphics.method_25294(x+3,y+8,x+13,y+9,0xffeeeeee);graphics.method_25294(x+6,y+13,x+10,y+14,0xffeeeeee);
   });
+  for(var type:java.util.List.of(com.yamikhal.playeremotes.client.gui.WheelEditScreen.class,com.yamikhal.playeremotes.client.gui.EmoteListScreen.class,com.yamikhal.playeremotes.client.gui.QuickWheelScreen.class))
+   dev.isxander.controlify.screenop.ScreenProcessorProvider.registerProvider(type,EmoteLibraryProcessor::new);
+  emoteLibrary=bindApi.registerBinding(builder->builder.id("knowlescraft","emote_library")
+   .name(net.minecraft.class_2561.method_43470("Emote Library"))
+   .category(net.minecraft.class_2561.method_43470("KnowlesCraft"))
+   .defaultInput(dev.isxander.controlify.bindings.input.EmptyInput.INSTANCE)
+   .radialCandidate(dev.isxander.controlify.bindings.RadialIcons.FABRIC_ICON).allowedContexts(dev.isxander.controlify.bindings.BindContext.IN_GAME));
   toggleHud=bindApi.registerBinding(builder->builder.id("knowlescraft","toggle_hud")
    .name(net.minecraft.class_2561.method_43470("Hide / Show HUD"))
    .category(net.minecraft.class_2561.method_43470("KnowlesCraft"))
@@ -72,6 +79,8 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
   ControlifyEvents.CONTROLLER_STATE_UPDATE.register(event->filterPauseInput(event.controller()));
   ControlifyEvents.ACTIVE_CONTROLLER_TICKED.register(event->{
    var controller=event.controller();var mc=net.minecraft.class_310.method_1551();
+   KnowlesCraftControllerActivity.report(controller);
+   if(mc.field_1755==null&&mc.field_1724!=null&&emoteLibrary.on(controller).justPressed())KnowlesCraftEmotes.requestLibrary();
    if(mc.field_1755==null&&mc.field_1724!=null&&toggleHud.on(controller).justPressed())toggleHud();
    KnowlesCraftRadial.frame(mc,controller);
    if(gestureController!=controller){selectFlow=new SelectFlow();waypointFlow=new KnowlesCraftWaypoints();emoteFlow=new KnowlesCraftEmotes();gestureController=controller;}
@@ -93,7 +102,7 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
    if(action==4){var mouse=Controlify.instance().virtualMouseHandler();if(!mouse.isVirtualMouseEnabled())mouse.enableVirtualMouse();}
 
   });
-  net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.END_CLIENT_TICK.register(mc->{if(mc.field_1755!=null||mc.field_1724==null)controllerZoom=false;});
+  net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.END_CLIENT_TICK.register(mc->{KnowlesCraftEmotes.flushLibrary(mc);if(mc.field_1755!=null||mc.field_1724==null)controllerZoom=false;});
   ControlifyEvents.CONTROLLER_DISCONNECTED.register(event->{KnowlesCraftRadial.forget(event.controller());controllerZoom=false;zoomWasDown=false;waypointFlow=new KnowlesCraftWaypoints();emoteFlow=new KnowlesCraftEmotes();selectFlow=new SelectFlow();gestureController=null;PAUSE_GESTURES.clear();PAUSE_BLOCKED.clear();});
   // Some ported mods register outside Fabric's key registry. Correlate those too.
   for(var key:net.minecraft.class_310.method_1551().field_1690.field_1839){
@@ -124,7 +133,7 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
     input.getBinding(new class_2960("controlify:sneak")).setBoundInput(new dev.isxander.controlify.bindings.input.ButtonInput(new class_2960("controlify:button/east")));
     input.getBinding(new class_2960("controlify:open_chat")).setBoundInput(dev.isxander.controlify.bindings.input.EmptyInput.INSTANCE);
     input.getBinding(new class_2960("controlify:pick_block")).setBoundInput(dev.isxander.controlify.bindings.input.EmptyInput.INSTANCE);
-    var actions=List.of("fabric-key-binding-api-v1:key.journeymap.map_toggle_alt",
+    var actions=List.of("knowlescraft:emote_library",
      "fabric-key-binding-api-v1:key.travelersbackpack.inventory",
      "fabric-key-binding-api-v1:key.plasmovoice.settings",
      "knowlescraft:toggle_hud",
@@ -133,6 +142,10 @@ public final class KnowlesCraftController implements ControlifyEntrypoint {
     // Missing optional mod actions never leave invalid entries in the radial menu.
     input.confObj().radialActions=actions.stream().map(class_2960::new)
      .map(id->input.getBinding(id)!=null?id:new class_2960("controlify:change_perspective")).toArray(class_2960[]::new);
+ }
+ public static final class EmoteLibraryProcessor extends dev.isxander.controlify.screenop.ScreenProcessor<net.minecraft.class_437>{
+  public EmoteLibraryProcessor(net.minecraft.class_437 screen){super(screen);}
+  public dev.isxander.controlify.virtualmouse.VirtualMouseBehaviour virtualMouseBehaviour(){return dev.isxander.controlify.virtualmouse.VirtualMouseBehaviour.ENABLED;}
  }
  public void onControllersDiscovered(ControlifyApi api){}
  public static boolean handleMapSelect(dev.isxander.controlify.controller.input.ControllerStateView state,Runnable closeMap,Runnable keepCursor){
