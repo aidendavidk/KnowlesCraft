@@ -16,6 +16,8 @@ public abstract class MaulerPetMixin extends class_1314 implements PetMauler {
  @Unique private boolean knowlescraft$returning,knowlescraft$installed;
  protected MaulerPetMixin(class_1299<? extends class_1314> type,class_1937 world){super(type,world);}
  public UUID knowlescraft$owner(){return knowlescraft$owner;}
+ @Inject(method="<init>",at=@At("TAIL"))
+ private void knowlescraft$addLure(class_1299<?> type,class_1937 world,CallbackInfo ci){field_6201.method_6277(1,new PetMovementGoal(this));}
  public void knowlescraft$tame(UUID owner){
   knowlescraft$owner=owner;method_5971();
   var player=method_37908().method_18470(owner);knowlescraft$lastHurt=player==null?-1:player.method_6117();
@@ -26,7 +28,6 @@ public abstract class MaulerPetMixin extends class_1314 implements PetMauler {
   var self=(MaulerEntity)(Object)this;
   field_6185.method_35113(goal->true);
   field_6201.method_6280(self.burrowDownGoal);
-  field_6201.method_6277(2,new PetMovementGoal(this));
   self.method_29509();method_5980(null);method_6015(null);
   self.setBurrowedDown(false);self.setBurrowingDownAnimationProgress(0);self.setTicksUntilNextBurrowingDown(Integer.MAX_VALUE);
  }
