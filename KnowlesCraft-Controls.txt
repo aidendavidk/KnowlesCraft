@@ -69,3 +69,5 @@ Thriller stays stationary. Jump cancels all emotes; sprint cancels except Naruto
 
 Backflip allows walking. Walking emotes use normal walking speed; sprinting cancels except Naruto Run.
 Matrix Dodge lowers the projectile hit area with the lean; shots above it pass, leg hits and other damage remain normal.
+
+Opening the emote wheel preserves crouch. Starting an emote automatically uncrouches and clears the sneak toggle.
