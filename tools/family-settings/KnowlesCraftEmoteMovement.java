@@ -20,15 +20,18 @@ public final class KnowlesCraftEmoteMovement {
  }
  public static boolean cancels(Rule rule,float forward,float sideways,boolean jump,boolean sprint){
   boolean moving=Math.abs(forward)>0.001f||Math.abs(sideways)>0.001f;
-  return jump||(sprint&&rule!=Rule.RUN)||(rule==Rule.STATIONARY&&moving)||(rule==Rule.SIDEWAYS&&Math.abs(forward)>0.001f);
+  return jump||(sprint&&moving&&rule!=Rule.RUN)||(rule==Rule.STATIONARY&&moving)||(rule==Rule.SIDEWAYS&&Math.abs(forward)>0.001f);
  }
 
  public static boolean gesture(String name){return WALK.contains(name)||name.equals("high_five_intro")||name.equals("high_five_sport_intro");}
  public static void apply(Rule rule,class_744 in,boolean sprint,Runnable stop){
   if(cancels(rule,in.field_3905,in.field_3907,in.field_3904,sprint)){stop.run();return;}
  }
+ private static final Map<EmotePlayback,Boolean> crouchStates=new WeakHashMap<>();
  public static void input(class_746 player){
   var active=EmotePlayers.get(player.method_5667());if(active==null||active.isStopping())return;
+  boolean crouched=player.method_5715();Boolean previous=crouchStates.put(active,crouched);
+  if(previous!=null&&!previous&&crouched){PlayerEmotesClient.stop();return;}
   var in=player.field_3913;var rule=rule(active.emoteId().toString(),active.link()!=null);
   boolean sprint=player.method_5624();
   for(var key:class_310.method_1551().field_1690.field_1839)if(key.method_1431().equals("key.sprint")&&key.method_1434())sprint=true;

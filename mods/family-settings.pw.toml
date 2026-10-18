@@ -1,8 +1,8 @@
 name = "KnowlesCraft Settings"
-filename = "knowlescraft-settings-1.5.24.jar"
+filename = "knowlescraft-settings-1.5.25.jar"
 side = "client"
 
 [download]
-url = "https://raw.githubusercontent.com/aidendavidk/KnowlesCraft/main/tools/family-settings/knowlescraft-settings-1.5.24.jar"
+url = "https://raw.githubusercontent.com/aidendavidk/KnowlesCraft/main/tools/family-settings/knowlescraft-settings-1.5.25.jar"
 hash-format = "sha512"
-hash = "8b6ad40c1f8189791e490ef4426bc113d482ec17ef5f0cba754d177e7efd8d4e0c8f4e3ada41904f62b2afb7380adb7d09b36fc522da2b7773970762c47c0e0d"
+hash = "c3e9326ddf0522715d21d87c496df02aa497d6943013bec94ab605a8fd251617c7cdcf5632336aa0138ba33f965bc8dd7422ad3f1e3dd4a47e77ae3c74ffdc0c"
