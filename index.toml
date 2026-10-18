@@ -106,7 +106,7 @@ metafile = true
 
 [[files]]
 file = "mods/family-settings.pw.toml"
-hash = "0a559560fc80710db7d0d6b7d353b42f3c4f91dcebd4aa95655117561fe3e4d3"
+hash = "45b46cce76d9681a0da142dcc72ced5e105e5ff3ede9e63cd40eff4d607f9b40"
 metafile = true
 
 [[files]]
