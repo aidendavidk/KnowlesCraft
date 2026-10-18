@@ -106,7 +106,7 @@ metafile = true
 
 [[files]]
 file = "mods/family-settings.pw.toml"
-hash = "0f4389d0943d532c38f1ae2255222d51b6f4936a81f8b5d5e903b74fc20d9c3b"
+hash = "2687c9ee6e27ed5d6180b7f62caa01a08ff6bd74b3872810a8130da0659969f7"
 metafile = true
 
 [[files]]
@@ -401,7 +401,7 @@ metafile = true
 
 [[files]]
 file = "KnowlesCraft-Controls.txt"
-hash = "7656bc5a1f9c773fd6314eb19acdc2cdb30cbecbed959044a349c2348f1bf45f"
+hash = "ac3d1fffdb969947d33ae33a2e7365cf60e7ea785c38c2726a8d85c54c662fea"
 
 [[files]]
 file = "mods/controlify.pw.toml"
@@ -420,5 +420,5 @@ metafile = true
 
 [[files]]
 file = "mods/knowlescraft-emote-rules.pw.toml"
-hash = "2a8d79827206fd54850368257aad865cbd14785604c661ffe4e5bf594f3da954"
+hash = "688219845cf140ff5cc1b54b105c6bd9ee0d16c0721f48bd11475b37be149379"
 metafile = true

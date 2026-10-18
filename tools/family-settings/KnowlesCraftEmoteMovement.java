@@ -6,28 +6,26 @@ import com.yamikhal.playeremotes.client.animation.*;
 
 /** One input policy for native keyboard and Controlify input; never roots the player. */
 public final class KnowlesCraftEmoteMovement {
- public enum Rule {STATIONARY,WALK,SLOW,SIDEWAYS,RUN,OFFER}
- public static final Set<String> WALK=Set.of("wave","slim_wave","salute","shrug","yawn","facepalm","arms_crossed","laugh");
- public static final Set<String> SLOW=Set.of("clap","cry","hands_up");
+ public enum Rule {STATIONARY,WALK,SIDEWAYS,RUN,OFFER}
+ public static final Set<String> WALK=Set.of("wave","slim_wave","salute","shrug","yawn","facepalm","arms_crossed","laugh","clap","cry","hands_up");
  public static Rule rule(String id,boolean paired){
   if(!id.startsWith("playeremotes:"))return Rule.STATIONARY;
   String name=id.substring(13);
+  if(name.equals("backflip"))return Rule.WALK;
   if(name.equals("naruto_run"))return Rule.RUN;
   if(name.equals("side_step_shuffle"))return Rule.SIDEWAYS;
   if(name.equals("high_five")||name.equals("high_five_sport"))return paired?Rule.STATIONARY:Rule.OFFER;
   if(WALK.contains(name))return Rule.WALK;
-  if(SLOW.contains(name))return Rule.SLOW;
   return Rule.STATIONARY;
  }
  public static boolean cancels(Rule rule,float forward,float sideways,boolean jump,boolean sprint){
   boolean moving=Math.abs(forward)>0.001f||Math.abs(sideways)>0.001f;
   return jump||(sprint&&rule!=Rule.RUN)||(rule==Rule.STATIONARY&&moving)||(rule==Rule.SIDEWAYS&&Math.abs(forward)>0.001f);
  }
- public static float factor(Rule rule){return rule==Rule.SLOW||rule==Rule.OFFER||rule==Rule.SIDEWAYS?0.35f:1f;}
- public static boolean gesture(String name){return WALK.contains(name)||SLOW.contains(name)||name.equals("high_five_intro")||name.equals("high_five_sport_intro");}
+
+ public static boolean gesture(String name){return WALK.contains(name)||name.equals("high_five_intro")||name.equals("high_five_sport_intro");}
  public static void apply(Rule rule,class_744 in,boolean sprint,Runnable stop){
   if(cancels(rule,in.field_3905,in.field_3907,in.field_3904,sprint)){stop.run();return;}
-  float factor=factor(rule);in.field_3905*=factor;in.field_3907*=factor;
  }
  public static void input(class_746 player){
   var active=EmotePlayers.get(player.method_5667());if(active==null||active.isStopping())return;

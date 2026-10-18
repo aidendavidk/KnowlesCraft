@@ -63,6 +63,9 @@ Attack cancels the current emote immediately and performs the normal attack/mini
 Emote Library edits the Left wheel favorites and browses all animations.
 
 Stationary emotes cancel immediately on movement. Everyday gestures support walking.
-Naruto Run keeps vanilla walking/sprinting; Shuffle allows slow sideways movement.
-High Five offers allow a slow approach; paired contact stays stationary.
+Naruto Run keeps vanilla walking/sprinting; Shuffle allows normal sideways walking, sprinting cancels the emote.
+High Five offers allow a walking approach; paired contact stays stationary.
 Thriller stays stationary. Jump cancels all emotes; sprint cancels except Naruto Run.
+
+Backflip allows walking. Walking emotes use normal walking speed; sprinting cancels except Naruto Run.
+Matrix Dodge lowers the projectile hit area with the lean; shots above it pass, leg hits and other damage remain normal.
