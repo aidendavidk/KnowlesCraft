@@ -1,0 +1,8 @@
+name = "KnowlesCraft Emote Rules"
+filename = "knowlescraft-emote-rules-1.0.0.jar"
+side = "both"
+
+[download]
+url = "https://raw.githubusercontent.com/aidendavidk/KnowlesCraft/main/tools/family-settings/knowlescraft-emote-rules-1.0.0.jar"
+hash-format = "sha512"
+hash = "24a1567ca54466a065d846fce04f7d91de5f9125950c2b939c06df74081de5b9916dddd6bba40465b4fedb3f239a2c7a55a922736cca6aabf9b5517a5cea281e"
