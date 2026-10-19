@@ -422,3 +422,8 @@ metafile = true
 file = "mods/knowlescraft-emote-rules.pw.toml"
 hash = "688219845cf140ff5cc1b54b105c6bd9ee0d16c0721f48bd11475b37be149379"
 metafile = true
+
+[[files]]
+file = "mods/jei.pw.toml"
+hash = "b462f925ef93708113a391d89b84ba9f105c8738bfac79dfec91f76cc46bfd83"
+metafile = true
