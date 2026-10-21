@@ -1,0 +1,8 @@
+name = "KnowlesCraft Camera and Music Controls"
+filename = "knowlescraft-camera-compat-1.0.0.jar"
+side = "client"
+
+[download]
+url = "https://raw.githubusercontent.com/aidendavidk/KnowlesCraft/main/tools/camera-compat/knowlescraft-camera-compat-1.0.0.jar"
+hash-format = "sha512"
+hash = "5cce0a8a3f00787b91eed7a449aedbff7d98e7426d6fe9c8c0252fbe53e8cc454b432cb3b6abd8eb2010585a1e64367aba2b83233601e44cecdee306b7004c23"

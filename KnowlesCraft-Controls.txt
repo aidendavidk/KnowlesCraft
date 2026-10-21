@@ -1,63 +1,63 @@
-KnowlesCraft controller controls
-
-Controller support is included on every computer. Connect a gamepad to switch to
-controller prompts; keyboard and mouse remain usable. Controller
-type is detected automatically. Prompts follow the connected controller, including on Steam Deck.
-
-STANDARD GAMEPAD (Xbox names; PlayStation prompts follow your controller)
-Left stick: move; click to sprint. Right stick: look; click to toggle zoom.
-A: jump. B: toggle sneak in gameplay; close menus. X: swap hands. Y: inventory.
-RT: mine/attack. LT: use/place. LB/RB: hotbar. Menu: pause.
-D-pad up: place a waypoint on the aimed-at block (within 128 blocks); aim near an existing waypoint marker to remove it. One action per press; no hold action. Chat stays in the radial menu. Down: drop. Left: tap last emote; hold 0.25 seconds for the emote wheel. Pick Block remains in the right radial. Right: radial menu.
-Select/View/Touchpad: tap for map; hold 0.5 seconds for one screenshot.
-Holding does not open the map. In the fullscreen map, Select closes the map;
-virtual mouse stays enabled. Other menus retain their cursor toggle.
-Perspective remains available in the radial menu.
-B / Circle goes back one menu level, including Options back to Pause.
-
+KnowlesCraft controller controls
+
+Controller support is included on every computer. Connect a gamepad to switch to
+controller prompts; keyboard and mouse remain usable. Controller
+type is detected automatically. Prompts follow the connected controller, including on Steam Deck.
+
+STANDARD GAMEPAD (Xbox names; PlayStation prompts follow your controller)
+Left stick: move; click to sprint. Right stick: look; click to toggle zoom.
+A: jump. B: toggle sneak in gameplay; close menus. X: swap hands. Y: inventory.
+RT: mine/attack. LT: use/place. LB/RB: hotbar. Menu: pause.
+D-pad up: place a waypoint on the aimed-at block (within 128 blocks); aim near an existing waypoint marker to remove it. One action per press; no hold action. Chat stays in the radial menu. Down: drop. Left: tap last emote; hold 0.25 seconds for the emote wheel. Pick Block remains in the right radial. Right: radial menu.
+Select/View/Touchpad: tap for map; hold 0.5 seconds for one screenshot.
+Holding does not open the map. In the fullscreen map, Select closes the map;
+virtual mouse stays enabled. Other menus retain their cursor toggle.
+Perspective remains available in the radial menu.
+B / Circle goes back one menu level, including Options back to Pause.
+
 Tap D-pad right to repeat the last radial action selected with this controller.
-Hold D-pad right for 0.25 seconds, select with the right stick, then release for:
-emote library, backpack, voice settings, hide/show HUD, chat, perspective, player list, pick block.
-Other mod keybindings (including Create and Zoomify) are available in Controlify's
-binding screen. Assign held actions directly to a spare button if you use them.
-Inventories: A selects, X takes half, Y quick-moves; B closes.
-Use the trackpad/mouse for recipe searching, maps and complex building screens.
-Mixed input is enabled on new profiles so mouse and gamepad can be used together.
-If a controller was already configured in Controlify, your settings are preserved.
-
-HUD
-Gameplay corner button hints are hidden to keep the minimap clear. Inventory,
-menu and radial-menu prompts remain available. You can re-enable gameplay hints
-in Controlify settings; later changes to this preference are preserved.
-
-CAMERA AND DETECTION
-Controlify's stock analog camera and device calibration are used, without a
-custom camera curve, added smoothing or mouse emulation. Complete calibration
-when prompted. Sensitivity and deadzones can be changed in Controlify settings.
-PlayStation USB/Bluetooth devices use their detected prompts. Steam Input can
-expose an Xbox virtual controller, in which case prompts follow that device;
-you can override the icon type in Controlify if needed.
-
-STEAM DECK: STEAM INPUT (ONE TIME, FOR YOUR PRISM STEAM SHORTCUT)
-Launch Prism from Gaming Mode. In Steam's controller settings select the template
-"Gamepad with Mouse Trackpad". Keep the normal buttons/sticks/triggers as gamepad
-inputs, rather than also sending WASD or mouse clicks (which causes double input).
-Right trackpad: mouse; click: left mouse button.
-Optional left trackpad: scroll wheel; click: middle mouse button.
-Enable the back grip buttons and map L4 = V (voice), R4 = B (backpack),
-L5 = Left Alt (Create tool menus), R5 = J (full map).
-Hold L5 and scroll the left trackpad for Create menu selection.
-Steam's own Steam+X shortcut opens its keyboard for chat/search.
-The modpack cannot apply settings to an unrelated Steam shortcut for you.
-
-DECK PERFORMANCE DEFAULTS
-LCD (Jupiter): 60 FPS cap. OLED (Galileo): 90 FPS cap.
-12-chunk view, 6-chunk client simulation, fast graphics, reduced particles,
-clouds/shaders off, GUI scale 2. These are starting settings, not guaranteed FPS.
-Server settings are unchanged. Defaults apply once; later personal changes stay.
-Original options and Iris settings are kept under config/knowlescraft/.
-
-Type /knowlescraft in game for help and your current keyboard bindings.
+Hold D-pad right for 0.25 seconds, select with the right stick, then release for:
+emote library, backpack, voice settings, hide/show HUD, chat, perspective, player list, pick block.
+Other mod keybindings (including Create and Zoomify) are available in Controlify's
+binding screen. Assign held actions directly to a spare button if you use them.
+Inventories: A selects, X takes half, Y quick-moves; B closes.
+Use the trackpad/mouse for recipe searching, maps and complex building screens.
+Mixed input is enabled on new profiles so mouse and gamepad can be used together.
+If a controller was already configured in Controlify, your settings are preserved.
+
+HUD
+Gameplay corner button hints are hidden to keep the minimap clear. Inventory,
+menu and radial-menu prompts remain available. You can re-enable gameplay hints
+in Controlify settings; later changes to this preference are preserved.
+
+CAMERA AND DETECTION
+Controlify's stock analog camera and device calibration are used, without a
+custom camera curve, added smoothing or mouse emulation. Complete calibration
+when prompted. Sensitivity and deadzones can be changed in Controlify settings.
+PlayStation USB/Bluetooth devices use their detected prompts. Steam Input can
+expose an Xbox virtual controller, in which case prompts follow that device;
+you can override the icon type in Controlify if needed.
+
+STEAM DECK: STEAM INPUT (ONE TIME, FOR YOUR PRISM STEAM SHORTCUT)
+Launch Prism from Gaming Mode. In Steam's controller settings select the template
+"Gamepad with Mouse Trackpad". Keep the normal buttons/sticks/triggers as gamepad
+inputs, rather than also sending WASD or mouse clicks (which causes double input).
+Right trackpad: mouse; click: left mouse button.
+Optional left trackpad: scroll wheel; click: middle mouse button.
+Enable the back grip buttons and map L4 = V (voice), R4 = B (backpack),
+L5 = Left Alt (Create tool menus), R5 = J (full map).
+Hold L5 and scroll the left trackpad for Create menu selection.
+Steam's own Steam+X shortcut opens its keyboard for chat/search.
+The modpack cannot apply settings to an unrelated Steam shortcut for you.
+
+DECK PERFORMANCE DEFAULTS
+LCD (Jupiter): 60 FPS cap. OLED (Galileo): 90 FPS cap.
+12-chunk view, 6-chunk client simulation, fast graphics, reduced particles,
+clouds/shaders off, GUI scale 2. These are starting settings, not guaranteed FPS.
+Server settings are unchanged. Defaults apply once; later personal changes stay.
+Original options and Iris settings are kept under config/knowlescraft/.
+
+Type /knowlescraft in game for help and your current keyboard bindings.
 
 Attack cancels the current emote immediately and performs the normal attack/mining action.
 Emote Library edits the Left wheel favorites and browses all animations.
@@ -71,3 +71,10 @@ Backflip allows walking. Walking emotes use normal walking speed; sprinting canc
 Matrix Dodge lowers the projectile hit area with the lean; shots above it pass, leg hits and other damage remain normal.
 
 Opening the emote wheel preserves crouch. Starting an emote automatically uncrouches and clears the sneak toggle.
+
+Photography and music (1.0.54):
+Use a loaded Exposure camera to look through it; use again to take a photograph.
+While looking through the camera: Square/X opens camera settings, Circle/B exits, and L1/R1 (LB/RB) zoom out/in. Circle/B closes camera settings first.
+Camera attachments, photo/album menus, and instrument song selection use the controller cursor.
+Use an instrument to select a song; the song menu has play/pause controls.
+Artifacts are equipped in Trinkets slots; loot comes from exploration.

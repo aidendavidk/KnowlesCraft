@@ -1,0 +1,13 @@
+name = "Artifacts Fabric 9.5.17"
+filename = "artifacts-fabric-9.5.17.jar"
+side = "both"
+
+[download]
+url = "https://cdn.modrinth.com/data/P0Mu4wcQ/versions/txBP6ArM/artifacts-fabric-9.5.17.jar"
+hash-format = "sha512"
+hash = "061e4f7a8b4db566273e04029e679774abe257413eeebd6141ec6de024020bc0a6d48b5dbd0ed470430f9b52737892ee04bde8d559eb7aa68aba4d85dd318754"
+
+[update]
+[update.modrinth]
+mod-id = "P0Mu4wcQ"
+version = "txBP6ArM"

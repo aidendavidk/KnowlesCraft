@@ -401,7 +401,7 @@ metafile = true
 
 [[files]]
 file = "KnowlesCraft-Controls.txt"
-hash = "6dca247bc4f8c927f7d4f9bacb51067b7cdcb7bb090015e6facc0dc2cd7ab7c4"
+hash = "90f0bae14d1b53aa9bf1e2725409eedeeeb332f93484c8cde5dcaa8597e4baa3"
 
 [[files]]
 file = "mods/controlify.pw.toml"
@@ -431,3 +431,27 @@ metafile = true
 [[files]]
 file = "config/treechop-client.toml"
 hash = "b03b349044903a4e07956a31142161b8f6eb2c6ea161f3a4ebfaf90f7644c4f2"
+
+[[files]]
+file = "mods/exposure.pw.toml"
+hash = "945398d4cb40758739bdd95bf84fae421bdffdb0ac021ae3497042954672e896"
+metafile = true
+
+[[files]]
+file = "mods/artifacts.pw.toml"
+hash = "67f7ef9e1ee5f0b573a069d5b68d92cb5563dfe22827683bac350a25b864ebd4"
+metafile = true
+
+[[files]]
+file = "mods/immersive-melodies.pw.toml"
+hash = "0a918885bde70d390e3a3572dfeb735ccb86dcc7237611982e14000b1f02ba86"
+metafile = true
+
+[[files]]
+file = "mods/knowlescraft-camera-compat.pw.toml"
+hash = "d11a2c3f686cec39eda500b5593454e8ab43dfb6dfbd366f9030dd67d661ce28"
+metafile = true
+
+[[files]]
+file = "config/immersive_melodies.json"
+hash = "1214cb9757313f024fe889b5ebdd8e88986beaa99725d4173173197f4ac4fc49"
