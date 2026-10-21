@@ -427,3 +427,7 @@ metafile = true
 file = "mods/jei.pw.toml"
 hash = "b462f925ef93708113a391d89b84ba9f105c8738bfac79dfec91f76cc46bfd83"
 metafile = true
+
+[[files]]
+file = "config/treechop-client.toml"
+hash = "b03b349044903a4e07956a31142161b8f6eb2c6ea161f3a4ebfaf90f7644c4f2"
