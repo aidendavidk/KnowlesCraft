@@ -2,7 +2,7 @@ hash-format = "sha256"
 
 [[files]]
 file = "journeymap/config/5.9/journeymap.waypoint.config"
-hash = "2d54534b68cd71360d419ea5fa46e578b6cf673fb28305602bed1a04684482cc"
+hash = "14020203fae9e3bf92d8cee9e99ac27847805eb9c2a71fc28c1993ca2179c544"
 
 [[files]]
 file = "mods/architectury.pw.toml"
@@ -455,3 +455,4 @@ metafile = true
 [[files]]
 file = "config/immersive_melodies.json"
 hash = "1214cb9757313f024fe889b5ebdd8e88986beaa99725d4173173197f4ac4fc49"
+
