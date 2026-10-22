@@ -9,6 +9,7 @@ public abstract class KnowlesCraftEmoteCancelMixin {
  @Redirect(method="shouldCancel",at=@At(value="INVOKE",target="Lnet/minecraft/class_304;method_1434()Z"))
  private static boolean knowlescraft$direction(class_304 key){
   var o=class_310.method_1551().field_1690;
+  if(key==o.field_1903&&family.settings.KnowlesCraftEmoteMovement.jumpingAllowed(class_310.method_1551().field_1724))return false;
   return key!=o.field_1894&&key!=o.field_1881&&key!=o.field_1913&&key!=o.field_1849&&key.method_1434();
  }
  @Redirect(method="shouldCancel",at=@At(value="INVOKE",target="Lnet/minecraft/class_746;method_5715()Z"))

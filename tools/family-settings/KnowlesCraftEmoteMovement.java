@@ -20,9 +20,14 @@ public final class KnowlesCraftEmoteMovement {
  }
  public static boolean cancels(Rule rule,float forward,float sideways,boolean jump,boolean sprint){
   boolean moving=Math.abs(forward)>0.001f||Math.abs(sideways)>0.001f;
-  return jump||(sprint&&moving&&rule!=Rule.RUN)||(rule==Rule.STATIONARY&&moving)||(rule==Rule.SIDEWAYS&&Math.abs(forward)>0.001f);
+  return (jump&&rule!=Rule.RUN)||(sprint&&moving&&rule!=Rule.RUN)||(rule==Rule.STATIONARY&&moving)||(rule==Rule.SIDEWAYS&&Math.abs(forward)>0.001f);
  }
 
+ public static boolean jumpingAllowed(class_746 player){
+  if(player==null)return false;
+  var active=EmotePlayers.get(player.method_5667());
+  return active!=null&&!active.isStopping()&&rule(active.emoteId().toString(),active.link()!=null)==Rule.RUN;
+ }
  public static boolean gesture(String name){return WALK.contains(name)||name.equals("high_five_intro")||name.equals("high_five_sport_intro");}
  public static void apply(Rule rule,class_744 in,boolean sprint,Runnable stop){
   if(cancels(rule,in.field_3905,in.field_3907,in.field_3904,sprint)){stop.run();return;}
