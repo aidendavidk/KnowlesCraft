@@ -456,3 +456,13 @@ metafile = true
 file = "config/immersive_melodies.json"
 hash = "1214cb9757313f024fe889b5ebdd8e88986beaa99725d4173173197f4ac4fc49"
 
+
+
+[[files]]
+file = "config/dynamic_fps.json"
+hash = "45c4f1d1e518ae23a576c254d3169cb41b3a32184065e091c87607302227e96e"
+
+[[files]]
+file = "mods/dynamic-fps.pw.toml"
+hash = "65a4014234b3655f70a4eec19d272f196c8c54887240935064068db89273ff73"
+metafile = true
