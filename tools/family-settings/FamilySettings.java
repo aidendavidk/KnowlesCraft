@@ -47,6 +47,8 @@ public final class FamilySettings implements PreLaunchEntrypoint {
         migrateRadialWaypoint(game);
         migrateRadialLibrary(game);
         applyEmoteHoldDefault(game);
+        applyHoldCrouchDefault(game);
+        applyHoldZoomDefault(game);
         if(!deck)return;
         Path marker=game.resolve("config/knowlescraft/deck-preset-v1.applied");if(Files.exists(marker))return;
         boolean oled=Files.readString(dmi.resolve("product_name")).strip().equalsIgnoreCase("Galileo");
@@ -164,6 +166,28 @@ public final class FamilySettings implements PreLaunchEntrypoint {
         if(Files.exists(path))Files.writeString(marker.getParent().resolve("playeremotes.before-keyboard-hold.json"),before,StandardOpenOption.CREATE_NEW);
         atomicWrite(path,new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(root));
         Files.writeString(marker,"Emote wheel opens while its keyboard key is held.\n");
+    }
+    static void applyHoldCrouchDefault(Path game)throws IOException{
+        Path marker=game.resolve("config/knowlescraft/keyboard-hold-crouch-v1.applied");
+        if(Files.exists(marker))return;
+        Path options=game.resolve("options.txt");
+        String before=Files.exists(options)?Files.readString(options):"version:3465\n";
+        Files.createDirectories(marker.getParent());
+        if(Files.exists(options))Files.copy(options,marker.getParent().resolve("options.before-hold-crouch.txt"),StandardCopyOption.REPLACE_EXISTING);
+        atomicWrite(options,option(before,"toggleCrouch","false"));
+        Files.writeString(marker,"Keyboard crouch is held, not toggled.\n");
+    }
+    static void applyHoldZoomDefault(Path game)throws IOException{
+        Path marker=game.resolve("config/knowlescraft/keyboard-hold-zoom-v1.applied");
+        if(Files.exists(marker))return;
+        Path path=game.resolve("config/zoomify.json");
+        String before=Files.exists(path)?Files.readString(path):"{}";
+        var root=com.google.gson.JsonParser.parseString(before).getAsJsonObject();
+        root.addProperty("zoomKeyBehaviour","hold");
+        Files.createDirectories(marker.getParent());
+        if(Files.exists(path))Files.copy(path,marker.getParent().resolve("zoomify.before-hold-zoom.json"),StandardCopyOption.REPLACE_EXISTING);
+        atomicWrite(path,new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(root));
+        Files.writeString(marker,"Keyboard zoom is held, not toggled.\n");
     }
     static void migrateCircleSneakZoom(Path game)throws IOException{
         Path marker=game.resolve("config/knowlescraft/circle-sneak-r3-zoom-v1.applied");

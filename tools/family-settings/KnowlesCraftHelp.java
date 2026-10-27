@@ -11,6 +11,8 @@ import net.minecraft.class_2561;
 public final class KnowlesCraftHelp implements ClientModInitializer {
  public void onInitializeClient(){
   net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.END_CLIENT_TICK.register(KnowlesCraftHelp::applyKeyboardDefaultsOnce);
+  net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.END_CLIENT_TICK.register(KnowlesCraftHelp::applyBackpackKeyOnce);
+  net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.END_CLIENT_TICK.register(KnowlesCraftHelp::applyZoomCrouchKeysOnce);
   ClientCommandRegistrationCallback.EVENT.register((dispatcher,registries)->{
    dispatcher.register(ClientCommandManager.literal("knowlescraft").executes(c->{show(c.getSource()::sendFeedback,"help");return 1;})
     .then(ClientCommandManager.literal("help").executes(c->{show(c.getSource()::sendFeedback,"help");return 1;}))
@@ -19,6 +21,49 @@ public final class KnowlesCraftHelp implements ClientModInitializer {
     .then(ClientCommandManager.literal("deck").executes(c->{show(c.getSource()::sendFeedback,"deck");return 1;}))
     .then(ClientCommandManager.literal("voice").executes(c->{show(c.getSource()::sendFeedback,"voice");return 1;})));
   });
+ }
+ static void applyBackpackKeyOnce(net.minecraft.class_310 mc){
+  Path marker=FabricLoader.getInstance().getConfigDir().resolve("knowlescraft/keyboard-backpack-r-v1.applied");
+  if(Files.exists(marker))return;
+  try{
+   Path options=FabricLoader.getInstance().getGameDir().resolve("options.txt");
+   Files.createDirectories(marker.getParent());
+   if(Files.exists(options))Files.copy(options,marker.getParent().resolve("options.before-backpack-r.txt"),StandardCopyOption.REPLACE_EXISTING);
+   applyBackpackKey(mc.field_1690.field_1839);
+   mc.field_1690.method_1640();
+   Files.writeString(marker,"R: Traveler's Backpack. Conflicting R bindings cleared.\n");
+  }catch(Exception e){System.err.println("[KnowlesCraft] Could not apply backpack key: "+e);}
+ }
+ static void applyBackpackKey(net.minecraft.class_304[] keys){
+  var r=net.minecraft.class_3675.method_15981("key.keyboard.r");
+  for(var key:keys){
+   if(key.method_1431().equals("key.travelersbackpack.inventory"))key.method_1422(r);
+   else if(key.method_1428().equals("key.keyboard.r"))key.method_1422(net.minecraft.class_3675.field_16237);
+  }
+  net.minecraft.class_304.method_1426();
+ }
+ static void applyZoomCrouchKeysOnce(net.minecraft.class_310 mc){
+  Path marker=FabricLoader.getInstance().getConfigDir().resolve("knowlescraft/keyboard-zoom-crouch-v1.applied");
+  if(Files.exists(marker))return;
+  try{
+   Path options=FabricLoader.getInstance().getGameDir().resolve("options.txt");
+   Files.createDirectories(marker.getParent());
+   if(Files.exists(options))Files.copy(options,marker.getParent().resolve("options.before-zoom-crouch.txt"),StandardCopyOption.REPLACE_EXISTING);
+   applyZoomCrouchKeys(mc.field_1690.field_1839);
+   mc.field_1690.method_1640();
+   Files.writeString(marker,"Left Ctrl: zoom; hold left Shift: crouch. Conflicting bindings cleared.\n");
+  }catch(Exception e){System.err.println("[KnowlesCraft] Could not apply zoom/crouch keys: "+e);}
+ }
+ static void applyZoomCrouchKeys(net.minecraft.class_304[] keys){
+  var ctrl=net.minecraft.class_3675.method_15981("key.keyboard.left.control");
+  var shift=net.minecraft.class_3675.method_15981("key.keyboard.left.shift");
+  for(var key:keys){
+   String id=key.method_1431();
+   if(id.equals("zoomify.key.zoom"))key.method_1422(ctrl);
+   else if(id.equals("key.sneak"))key.method_1422(shift);
+   else if(key.method_1428().equals("key.keyboard.left.control")||key.method_1428().equals("key.keyboard.left.shift"))key.method_1422(net.minecraft.class_3675.field_16237);
+  }
+  net.minecraft.class_304.method_1426();
  }
  static void applyKeyboardDefaultsOnce(net.minecraft.class_310 mc){
   Path marker=FabricLoader.getInstance().getConfigDir().resolve("knowlescraft/keyboard-emote-map-v1.applied");
