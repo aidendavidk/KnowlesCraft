@@ -106,7 +106,7 @@ metafile = true
 
 [[files]]
 file = "mods/family-settings.pw.toml"
-hash = "b013b988985c4416cdb0511d4c0dee079b6965a45e0640f688d086b06b0914d0"
+hash = "36c146907bc8c206edda6fbbd42cc705418214917ad709e023f155f0279e52c5"
 metafile = true
 
 [[files]]
@@ -466,3 +466,4 @@ hash = "45c4f1d1e518ae23a576c254d3169cb41b3a32184065e091c87607302227e96e"
 file = "mods/dynamic-fps.pw.toml"
 hash = "65a4014234b3655f70a4eec19d272f196c8c54887240935064068db89273ff73"
 metafile = true
+

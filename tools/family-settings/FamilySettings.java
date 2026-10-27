@@ -46,6 +46,7 @@ public final class FamilySettings implements PreLaunchEntrypoint {
         migrateEmoteLeft(game);
         migrateRadialWaypoint(game);
         migrateRadialLibrary(game);
+        applyEmoteHoldDefault(game);
         if(!deck)return;
         Path marker=game.resolve("config/knowlescraft/deck-preset-v1.applied");if(Files.exists(marker))return;
         boolean oled=Files.readString(dmi.resolve("product_name")).strip().equalsIgnoreCase("Galileo");
@@ -151,8 +152,18 @@ public final class FamilySettings implements PreLaunchEntrypoint {
         }
         Files.createDirectories(marker.getParent());Files.writeString(marker.getParent().resolve("controlify.before-emote-left-wheel.json"),before);
         atomicWrite(config,new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(root));Files.writeString(marker,"Left: tap last emote, hold emote wheel. Pick Block remains in utility radial.\n");
-        Path options=game.resolve("options.txt");String optionText=Files.exists(options)?Files.readString(options):"version:3465\n";
-        if(!optionText.contains("key_key.playeremotes.wheel:")||optionText.contains("key_key.playeremotes.wheel:key.keyboard.b"))atomicWrite(options,option(optionText,"key_key.playeremotes.wheel","key.keyboard.h"));
+    }
+    static void applyEmoteHoldDefault(Path game)throws IOException{
+        Path marker=game.resolve("config/knowlescraft/keyboard-emote-hold-v1.applied");
+        if(Files.exists(marker))return;
+        Path path=game.resolve("config/playeremotes.json");
+        String before=Files.exists(path)?Files.readString(path):"{}";
+        var root=com.google.gson.JsonParser.parseString(before).getAsJsonObject();
+        root.addProperty("holdToOpenWheel",true);
+        Files.createDirectories(marker.getParent());
+        if(Files.exists(path))Files.writeString(marker.getParent().resolve("playeremotes.before-keyboard-hold.json"),before,StandardOpenOption.CREATE_NEW);
+        atomicWrite(path,new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(root));
+        Files.writeString(marker,"Emote wheel opens while its keyboard key is held.\n");
     }
     static void migrateCircleSneakZoom(Path game)throws IOException{
         Path marker=game.resolve("config/knowlescraft/circle-sneak-r3-zoom-v1.applied");

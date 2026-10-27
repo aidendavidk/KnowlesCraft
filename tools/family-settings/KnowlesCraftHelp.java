@@ -10,6 +10,7 @@ import net.minecraft.class_2561;
 /** Local help: no server permission or chat broadcast required. */
 public final class KnowlesCraftHelp implements ClientModInitializer {
  public void onInitializeClient(){
+  net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.END_CLIENT_TICK.register(KnowlesCraftHelp::applyKeyboardDefaultsOnce);
   ClientCommandRegistrationCallback.EVENT.register((dispatcher,registries)->{
    dispatcher.register(ClientCommandManager.literal("knowlescraft").executes(c->{show(c.getSource()::sendFeedback,"help");return 1;})
     .then(ClientCommandManager.literal("help").executes(c->{show(c.getSource()::sendFeedback,"help");return 1;}))
@@ -18,6 +19,29 @@ public final class KnowlesCraftHelp implements ClientModInitializer {
     .then(ClientCommandManager.literal("deck").executes(c->{show(c.getSource()::sendFeedback,"deck");return 1;}))
     .then(ClientCommandManager.literal("voice").executes(c->{show(c.getSource()::sendFeedback,"voice");return 1;})));
   });
+ }
+ static void applyKeyboardDefaultsOnce(net.minecraft.class_310 mc){
+  Path marker=FabricLoader.getInstance().getConfigDir().resolve("knowlescraft/keyboard-emote-map-v1.applied");
+  if(Files.exists(marker))return;
+  try{
+   Path options=FabricLoader.getInstance().getGameDir().resolve("options.txt");
+   Files.createDirectories(marker.getParent());
+   if(Files.exists(options))Files.copy(options,marker.getParent().resolve("options.before-keyboard-emote-map.txt"),StandardCopyOption.REPLACE_EXISTING);
+   applyKeyboardBindings(mc.field_1690.field_1839);
+   mc.field_1690.method_1640();
+   Files.writeString(marker,"B: hold emote wheel; M: map. Conflicting B and M bindings cleared.\n");
+  }catch(Exception e){System.err.println("[KnowlesCraft] Could not apply keyboard defaults: "+e);}
+ }
+ static void applyKeyboardBindings(net.minecraft.class_304[] keys){
+  var b=net.minecraft.class_3675.method_15981("key.keyboard.b");
+  var m=net.minecraft.class_3675.method_15981("key.keyboard.m");
+  for(var key:keys){
+   String id=key.method_1431();
+   if(id.equals("key.playeremotes.wheel"))key.method_1422(b);
+   else if(id.equals("key.journeymap.map_toggle_alt"))key.method_1422(m);
+   else if(key.method_1428().equals("key.keyboard.b")||key.method_1428().equals("key.keyboard.m"))key.method_1422(net.minecraft.class_3675.field_16237);
+  }
+  net.minecraft.class_304.method_1426();
  }
  static void show(java.util.function.Consumer<class_2561> output,String topic){
   for(String line:lines(FabricLoader.getInstance().getGameDir(),topic))output.accept(class_2561.method_43470(line));
