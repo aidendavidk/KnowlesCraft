@@ -467,4 +467,7 @@ file = "mods/dynamic-fps.pw.toml"
 hash = "65a4014234b3655f70a4eec19d272f196c8c54887240935064068db89273ff73"
 metafile = true
 
-
+[[files]]
+file = "mods/leashall.pw.toml"
+hash = "0cae46cadc132a2bf7adbb4887cb939601cc16ca562237f72177a094bd4f2472"
+metafile = true
