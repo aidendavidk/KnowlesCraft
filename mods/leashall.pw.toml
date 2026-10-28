@@ -1,0 +1,8 @@
+name = "LeashAll"
+filename = "leashall-fabric-1.20.1-1.5.0.jar"
+side = "both"
+
+[download]
+url = "https://cdn.modrinth.com/data/oKERV1Bi/versions/7tnH2QQt/leashall-fabric-1.20.1-1.5.0.jar"
+hash-format = "sha512"
+hash = "656d579532ad446b733ddcf8c083ac2f9ec82e96000f54dfa69b82c2f08d7e75eebec7757c8c1feb780fd2f94fe716bde2b950482c88155cffb234d2877673fb"
