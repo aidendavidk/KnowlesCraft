@@ -1,0 +1,8 @@
+name = "KnowlesCraft Emote Controls"
+filename = "knowlescraft-emote-controls-1.0.0.jar"
+side = "client"
+
+[download]
+url = "https://raw.githubusercontent.com/aidendavidk/KnowlesCraft/main/tools/emote-controls/knowlescraft-emote-controls-1.0.0.jar"
+hash-format = "sha512"
+hash = "b7af0160c6da00fa64f95cff2df5503cc4650d03f8fbaa8fa9b2cd8f53277d194ede91bd07dc84a479df0b39236c0e8be135272d726c16fbcf675a3321e26102"

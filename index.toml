@@ -414,6 +414,11 @@ hash = "6843619171fd9b8c17d79f62b255ac8a155c5765975c4310942b1c9c5337124c"
 metafile = true
 
 [[files]]
+file = "mods/knowlescraft-emote-controls.pw.toml"
+hash = "ed3b17679c7063a587d624358e251f2a75b2e1bdd3e7424b87302896db7fa0d2"
+metafile = true
+
+[[files]]
 file = "mods/knowlescraft-mauler-care.pw.toml"
 hash = "30cefd0b348bbfe4365c544ce2cfd6ddc14e0f9c4d84707ed7f51b97c63eae58"
 metafile = true
