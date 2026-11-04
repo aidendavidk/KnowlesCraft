@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "knowlescraft_emote_controls",
+  "version": "${version}",
+  "name": "KnowlesCraft Emote Controls",
+  "description": "Matches keyboard emote tap and hold controls to the controller.",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "family.emotecontrols.EmoteControls"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.15.7",
+    "minecraft": "1.20.1",
+    "fabric-api": "*",
+    "playeremotes": "*"
+  }
+}

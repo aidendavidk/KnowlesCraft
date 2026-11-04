@@ -1,0 +1,57 @@
+name: Build KnowlesCraft emote controls
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/build-emote-controls.yml'
+      - 'tools/emote-controls/**'
+      - '!tools/emote-controls/knowlescraft-emote-controls-*.jar'
+      - '!tools/emote-controls/knowlescraft-emote-controls-*.sha512'
+  workflow_dispatch:
+
+concurrency:
+  group: knowlescraft-emote-controls
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.6'
+
+      - name: Build the client mod
+        run: gradle -p tools/emote-controls build
+
+      - name: Store the client mod and hash
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp tools/emote-controls/build/libs/knowlescraft-emote-controls-1.0.0.jar tools/emote-controls/knowlescraft-emote-controls-1.0.0.jar
+          sha512sum tools/emote-controls/knowlescraft-emote-controls-1.0.0.jar | cut -d ' ' -f 1 > tools/emote-controls/knowlescraft-emote-controls-1.0.0.sha512
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f tools/emote-controls/knowlescraft-emote-controls-1.0.0.jar tools/emote-controls/knowlescraft-emote-controls-1.0.0.sha512
+          if git diff --cached --quiet; then
+            echo 'Client mod build is already current.'
+            exit 0
+          fi
+          git commit -m 'Build KnowlesCraft emote controls [skip ci]'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
