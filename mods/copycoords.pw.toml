@@ -1,0 +1,8 @@
+name = "CopyCoords"
+filename = "copycoords+1.20.1-1.7.0.jar"
+side = "client"
+
+[download]
+url = "https://cdn.modrinth.com/data/GzPkXb2a/versions/Zwt3cs9V/copycoords%2B1.20.1-1.7.0.jar"
+hash-format = "sha512"
+hash = "b194f0210349793413739500d78c64d5958fb92ace7ca6b96a08c80957d4811488158eb7148bb869d53c70fe2fa35bc0205f14b32b34fa71935bbe721fac177c"
