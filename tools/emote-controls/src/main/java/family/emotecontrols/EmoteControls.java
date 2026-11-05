@@ -27,6 +27,7 @@ public final class EmoteControls implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        CoordinateChatCopy.initialize();
         try {
             Class<?> playerEmotes = Class.forName("com.yamikhal.playeremotes.client.PlayerEmotesClient");
             wheelKey = (KeyBinding) playerEmotes.getField("OPEN_WHEEL").get(null);

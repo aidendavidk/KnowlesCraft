@@ -3,7 +3,7 @@
   "id": "knowlescraft_emote_controls",
   "version": "${version}",
   "name": "KnowlesCraft Emote Controls",
-  "description": "Matches keyboard emote tap and hold controls to the controller.",
+  "description": "Matches keyboard emote tap and hold controls to the controller and makes chat coordinates clickable to copy.",
   "environment": "client",
   "entrypoints": {
     "client": [
