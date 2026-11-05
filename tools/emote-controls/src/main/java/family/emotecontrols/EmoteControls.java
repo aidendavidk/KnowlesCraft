@@ -19,7 +19,6 @@ public final class EmoteControls implements ClientModInitializer {
     private static final long HOLD_NANOS = 250_000_000L;
 
     private static KeyBinding wheelKey;
-    private static Method wasPressedMethod;
     private static boolean down;
     private static boolean opened;
     private static boolean blocked;
@@ -31,7 +30,6 @@ public final class EmoteControls implements ClientModInitializer {
         try {
             Class<?> playerEmotes = Class.forName("com.yamikhal.playeremotes.client.PlayerEmotesClient");
             wheelKey = (KeyBinding) playerEmotes.getField("OPEN_WHEEL").get(null);
-            wasPressedMethod = KeyBinding.class.getMethod("wasPressed");
         } catch (ReflectiveOperationException | LinkageError e) {
             reportFailure("Could not connect to the Player Emotes wheel key", e);
             return;
@@ -101,7 +99,7 @@ public final class EmoteControls implements ClientModInitializer {
     private static boolean drainClicks() {
         boolean clicked = false;
         try {
-            while (Boolean.TRUE.equals(wasPressedMethod.invoke(wheelKey))) {
+            while (wheelKey.wasPressed()) {
                 clicked = true;
             }
         } catch (ReflectiveOperationException | RuntimeException e) {
