@@ -102,7 +102,7 @@ public final class EmoteControls implements ClientModInitializer {
             while (wheelKey.wasPressed()) {
                 clicked = true;
             }
-        } catch (ReflectiveOperationException | RuntimeException e) {
+        } catch (RuntimeException e) {
             reportFailure("Could not read the Player Emotes wheel key", e);
         }
         return clicked;
