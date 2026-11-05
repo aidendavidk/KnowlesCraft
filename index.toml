@@ -70,11 +70,6 @@ hash = "9860f85759a2f1f3c40099eeca37174d2cae984b123634d90631cde94a442113"
 metafile = true
 
 [[files]]
-file = "mods/copycoords.pw.toml"
-hash = "3e9b025b1a56e8de8eff562edb796276154559820f8185711c3e27e11210f1d8"
-metafile = true
-
-[[files]]
 file = "mods/coroutil.pw.toml"
 hash = "4319ed079905eae4612466f8a745da9e1fe45d15f8be2e99b9a455eff75ae881"
 metafile = true
@@ -415,7 +410,7 @@ metafile = true
 
 [[files]]
 file = "mods/knowlescraft-emote-controls.pw.toml"
-hash = "ed3b17679c7063a587d624358e251f2a75b2e1bdd3e7424b87302896db7fa0d2"
+hash = "b1b971ecf6e98330ad3060074c38037da7c9c66d00b1466d30fd06b1f65e3b17"
 metafile = true
 
 [[files]]

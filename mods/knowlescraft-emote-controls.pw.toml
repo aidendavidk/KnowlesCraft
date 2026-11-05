@@ -5,4 +5,4 @@ side = "client"
 [download]
 url = "https://raw.githubusercontent.com/aidendavidk/KnowlesCraft/main/tools/emote-controls/knowlescraft-emote-controls-1.0.0.jar"
 hash-format = "sha512"
-hash = "b7af0160c6da00fa64f95cff2df5503cc4650d03f8fbaa8fa9b2cd8f53277d194ede91bd07dc84a479df0b39236c0e8be135272d726c16fbcf675a3321e26102"
+hash = "97bff8a1bdacf14ee05e6d6a7e72ec781a657b613c33fbd85c5f4e75ebe3e1925b34a8c262762f528d7bb93dfcb82a9e3b834c3335806f1ccb75c56ea6001ac8"
