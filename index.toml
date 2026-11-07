@@ -476,3 +476,8 @@ metafile = true
 file = "mods/leashall.pw.toml"
 hash = "0cae46cadc132a2bf7adbb4887cb939601cc16ca562237f72177a094bd4f2472"
 metafile = true
+
+[[files]]
+file = "mods/copycoords.pw.toml"
+hash = "d8a1ba16dc2044a8c6f0d4c449ccd3e4f09d4f53153b7d559a14827e69bbce4e"
+metafile = true

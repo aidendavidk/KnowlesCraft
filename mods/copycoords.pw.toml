@@ -1,0 +1,8 @@
+name = "Copy Coords"
+filename = "copycoords+1.20.1-1.7.0.jar"
+side = "client"
+
+[download]
+url = "https://raw.githubusercontent.com/aidendavidk/KnowlesCraft/main/tools/copycoords/copycoords-1.20.1-1.7.0-java17.jar"
+hash-format = "sha256"
+hash = "31b15e4e664f349fc45ea42c773a459320c7659b384890272e41160e686c3959"

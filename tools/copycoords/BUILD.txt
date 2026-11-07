@@ -1,0 +1,7 @@
+CopyCoords v1.7.0 for Minecraft 1.20.1, compiled for Java 17.
+Source: https://github.com/MR-kartoshki/CopyCoords/tree/v1.7.0
+Source commit: c241367dc8ea06dc47f99e5dbbbc1d65342713f6
+Local patch: Default copy-with-dimension key is unbound. On startup, an old saved B binding for that action is cleared so B remains the emote wheel key.
+Build: Temurin 21.0.13+9, Gradle 9.3.1, :1.20.1:build, JavaCompile options.release=17.
+SHA-256: 31b15e4e664f349fc45ea42c773a459320c7659b384890272e41160e686c3959
+License: MIT; see LICENSE.
